@@ -54,7 +54,7 @@ public class BulletLogic : MonoBehaviour
     {
         if (LockedTarget != null)
         {
-            BulletRB.velocity = direction * MoveSpeed;
+            BulletRB.linearVelocity = direction * MoveSpeed;
 
             Destroy(this.gameObject, 3.4f);
         }

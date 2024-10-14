@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
 
         if (CurrentDashTime > 0 && Mathf.Abs(PlayerVelocity_X) > 0)
         {
-            PlayerRB.velocity = new Vector2(PlayerVelocity_X * 3 * MoveSpeed, 0);
+            PlayerRB.linearVelocity = new Vector2(PlayerVelocity_X * 3 * MoveSpeed, 0);
             GameObject Effect = Instantiate(DashEffect, this.gameObject.transform.position, this.gameObject.transform.rotation);
             SpriteRenderer Shadow = Effect.GetComponent<SpriteRenderer>();
             Shadow.sprite = PlayerAppearance.sprite;
@@ -100,11 +100,11 @@ public class PlayerController : MonoBehaviour
     private void PlayerMovement()
     {
         // Movement
-        PlayerRB.velocity = new Vector2(PlayerVelocity_X * MoveSpeed, PlayerRB.velocity.y);
+        PlayerRB.linearVelocity = new Vector2(PlayerVelocity_X * MoveSpeed, PlayerRB.linearVelocity.y);
 
         AnimationController.SetBool("IsGrounded", IsGrounded);
         AnimationController.SetFloat("Horizontal Input", Mathf.Abs(PlayerVelocity_X));
-        AnimationController.SetFloat("Y Velocity", PlayerRB.velocity.y);
+        AnimationController.SetFloat("Y Velocity", PlayerRB.linearVelocity.y);
 
         if (PlayerVelocity_X > 0.1) 
         {
@@ -133,12 +133,12 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started && IsGrounded == true && CurrentDashTime <= 0 ) // <=> This kinda same with Input.GetButtonDown, which only active when you start press some button
         {
-            PlayerRB.velocity = new Vector2(PlayerRB.velocity.x, JumpForce);
+            PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, JumpForce);
         }
 
         if (context.started && IsGrounded == false && Abled2DoubleJump == true && CurrentDashTime <= 0)
         {
-            PlayerRB.velocity = new Vector2(PlayerRB.velocity.x, JumpForce);
+            PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, JumpForce);
             Abled2DoubleJump = false;
         }
     }
