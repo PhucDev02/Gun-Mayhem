@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
         private float CurrentDashTime = 0;
         private float CurrentDashCoolDown = 0;
 
-    void Start()
+    void OnValidate()
     {
         AnimationController = this.gameObject.GetComponent<Animator>();
         PlayerAppearance = this.gameObject.GetComponent<SpriteRenderer>();
