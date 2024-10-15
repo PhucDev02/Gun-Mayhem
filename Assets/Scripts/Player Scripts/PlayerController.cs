@@ -4,39 +4,40 @@ using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IPlayer
 {
+    [SerializeField] InputSetting inputSetting;
     [Header("Movement System")]
-        [SerializeField] private Rigidbody2D PlayerRB;
-        [SerializeField] private float MoveSpeed, JumpForce;
-        private float PlayerVelocity_X;
+    [SerializeField] private Rigidbody2D PlayerRB;
+    [SerializeField] private float MoveSpeed, JumpForce;
+    private float PlayerVelocity_X;
 
     [Header("Jumping System")]
-        [SerializeField] private GameObject GroundCheckPoint;
-        [SerializeField] private LayerMask WhatIsGround;
-        [SerializeField] private float CheckRadius;
-        private bool IsGrounded;
-        private bool Abled2DoubleJump;
+    [SerializeField] private GameObject GroundCheckPoint;
+    [SerializeField] private LayerMask WhatIsGround;
+    [SerializeField] private float CheckRadius;
+    private bool IsGrounded;
+    private bool Abled2DoubleJump;
 
     [Header("Animation System")]
-        private Animator AnimationController;
-        [SerializeField] public GameObject RankIcon;
+    private Animator AnimationController;
+    [SerializeField] public GameObject RankIcon;
 
     [Header("Attack System")]
-        [SerializeField] private GameObject AttackPoint;
-        [SerializeField] private float AttackCoolDown;
-        [SerializeField] private GameObject Bullet;
-        [SerializeField] private AudioClip AttackSound;
-        private float CurrentAttackCoolDown = 0;
-        private AudioSource Audio;
+    [SerializeField] private GameObject AttackPoint;
+    [SerializeField] private float AttackCoolDown;
+    [SerializeField] private GameObject Bullet;
+    [SerializeField] private AudioClip AttackSound;
+    private float CurrentAttackCoolDown = 0;
+    private AudioSource Audio;
 
     [Header("Dash System")]
-        [SerializeField] private float DashTime;
-        [SerializeField] private float DashCoolDown;
-        [SerializeField] private GameObject DashEffect;
-        private SpriteRenderer PlayerAppearance;
-        private float CurrentDashTime = 0;
-        private float CurrentDashCoolDown = 0;
+    [SerializeField] private float DashTime;
+    [SerializeField] private float DashCoolDown;
+    [SerializeField] private GameObject DashEffect;
+    private SpriteRenderer PlayerAppearance;
+    private float CurrentDashTime = 0;
+    private float CurrentDashCoolDown = 0;
 
     void OnValidate()
     {
@@ -48,36 +49,36 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         PlayerMovement();
-
-        RankIcon.transform.rotation = Quaternion.Euler(0,0,0);
+        RankIcon.transform.rotation = Quaternion.Euler(0, 0, 0);
 
         IsGrounded = Physics2D.OverlapCircle(GroundCheckPoint.transform.position, CheckRadius, WhatIsGround);
-        
-        if (IsGrounded == true) 
+
+        if (IsGrounded == true)
         {
             Abled2DoubleJump = true;
         }
 
         CurrentDashTime -= Time.deltaTime;
 
-        if (CurrentDashTime < 0) 
-        { 
+        if (CurrentDashTime < 0)
+        {
             CurrentDashTime = 0;
         }
 
         CurrentDashCoolDown -= Time.deltaTime;
 
-        if (CurrentDashCoolDown < 0) 
+        if (CurrentDashCoolDown < 0)
         {
             CurrentDashCoolDown = 0;
         }
 
         CurrentAttackCoolDown -= Time.deltaTime;
 
-        if (CurrentAttackCoolDown < 0) {
+        if (CurrentAttackCoolDown < 0)
+        {
             CurrentAttackCoolDown = 0;
-        } 
-
+        }
+        //dash
         if (CurrentDashTime > 0 && Mathf.Abs(PlayerVelocity_X) > 0)
         {
             PlayerRB.linearVelocity = new Vector2(PlayerVelocity_X * 3 * MoveSpeed, 0);
@@ -86,12 +87,12 @@ public class PlayerController : MonoBehaviour
             Shadow.sprite = PlayerAppearance.sprite;
             Shadow.color = new Color(1, 1, 1, 0.05f);
         }
-        
+
     }
 
-    public void DashSystem(InputAction.CallbackContext context) 
+    public void DashSystem(InputAction.CallbackContext context)
     {
-        if (context.started && CurrentDashCoolDown <= 0) 
+        if (context.started && CurrentDashCoolDown <= 0)
         {
             CurrentDashTime = DashTime;
             CurrentDashCoolDown = DashCoolDown;
@@ -99,6 +100,18 @@ public class PlayerController : MonoBehaviour
     }
     private void PlayerMovement()
     {
+        PlayerVelocity_X = 0;
+        if (Input.GetKey(inputSetting.left))
+        {
+            PlayerVelocity_X = -1;
+            this.gameObject.transform.rotation = Quaternion.Euler(0, -180, 0);
+        }
+        if (Input.GetKey(inputSetting.right))
+        {
+            PlayerVelocity_X = 1;
+            this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+
         // Movement
         PlayerRB.linearVelocity = new Vector2(PlayerVelocity_X * MoveSpeed, PlayerRB.linearVelocity.y);
 
@@ -106,15 +119,15 @@ public class PlayerController : MonoBehaviour
         AnimationController.SetFloat("Horizontal Input", Mathf.Abs(PlayerVelocity_X));
         AnimationController.SetFloat("Y Velocity", PlayerRB.linearVelocity.y);
 
-        if (PlayerVelocity_X > 0.1) 
-        {
-            this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
+        //if (PlayerVelocity_X > 0.1)
+        //{
+        //    this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+        //}
 
-        if (PlayerVelocity_X < -0.1)
-        {
-            this.gameObject.transform.rotation = Quaternion.Euler(0, -180, 0);
-        }
+        //if (PlayerVelocity_X < -0.1)
+        //{
+        //    this.gameObject.transform.rotation = Quaternion.Euler(0, -180, 0);
+        //}
     }
 
     public void NewInputSystem_PlayerMovement(InputAction.CallbackContext context) // context is the value that store user input
@@ -125,13 +138,13 @@ public class PlayerController : MonoBehaviour
         // x axis is equal to A and D or Left and Right buttons (-1 to 1 just like Input.GetAxisRaw in old input system)
 
         PlayerVelocity_X = context.ReadValue<Vector2>().x;
+        Debug.Log(PlayerVelocity_X);
 
-        
     }
 
     public void NewInputSystem_PlayerJump(InputAction.CallbackContext context)
     {
-        if (context.started && IsGrounded == true && CurrentDashTime <= 0 ) // <=> This kinda same with Input.GetButtonDown, which only active when you start press some button
+        if (context.started && IsGrounded == true && CurrentDashTime <= 0) // <=> This kinda same with Input.GetButtonDown, which only active when you start press some button
         {
             PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, JumpForce);
         }
@@ -145,7 +158,7 @@ public class PlayerController : MonoBehaviour
 
     public void NewInputSystem_PlayerAttack(InputAction.CallbackContext context)
     {
-        if (context.started && CurrentAttackCoolDown <= 0) 
+        if (context.started && CurrentAttackCoolDown <= 0)
         {
             AnimationController.SetTrigger("Attack");
             Audio.PlayOneShot(AttackSound);
@@ -159,4 +172,23 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(GroundCheckPoint.transform.position, CheckRadius);
     }
 
+    public void Move(float dir)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void Jump()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void Attack(int damage)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void TakeDamage(int damage)
+    {
+        throw new System.NotImplementedException();
+    }
 }

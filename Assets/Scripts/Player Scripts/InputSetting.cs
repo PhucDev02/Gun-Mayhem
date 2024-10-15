@@ -3,9 +3,10 @@ using UnityEngine;
 [Serializable]
 public class InputSetting
 {
-    KeyCode jump;
-    KeyCode left;
-    KeyCode right;
+    public KeyCode jump;
+    public KeyCode left;
+    public KeyCode right;
     //KeyCode down;
-    KeyCode attack;
+    public KeyCode attack;
+    public KeyCode dash;
 }

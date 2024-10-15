@@ -445,6 +445,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d0aaba7d4b03b145910a7b2b9854afb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputSetting:
+    jump: 119
+    left: 97
+    right: 100
+    attack: 32
   PlayerRB: {fileID: 947344563992204874}
   MoveSpeed: 4
   JumpForce: 15
