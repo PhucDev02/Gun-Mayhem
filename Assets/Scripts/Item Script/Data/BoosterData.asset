@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99bb1cdd43abd414ba0e97223c4f26d9, type: 3}
+  m_Name: BoosterData
+  m_EditorClassIdentifier: 
+  boosters:
+  - effectType: 0
+    boosterSpr: {fileID: 2710443080846324409, guid: adcb5fae9aa0a804c860037bd1c6ff1c, type: 3}
+    value: 3
+    rate: 60
+  - effectType: 1
+    boosterSpr: {fileID: -1312994402987499043, guid: adcb5fae9aa0a804c860037bd1c6ff1c, type: 3}
+    value: 3
+    rate: 0
+  - effectType: 2
+    boosterSpr: {fileID: -4060402318970035109, guid: adcb5fae9aa0a804c860037bd1c6ff1c, type: 3}
+    value: 0
+    rate: 0
+  - effectType: 3
+    boosterSpr: {fileID: 8575179032478902733, guid: adcb5fae9aa0a804c860037bd1c6ff1c, type: 3}
+    value: 0
+    rate: 40

@@ -12,10 +12,9 @@ GameObject:
   - component: {fileID: 8236300735053138297}
   - component: {fileID: 1113251704820542032}
   - component: {fileID: 1803863049412475807}
-  - component: {fileID: 5498392996214979391}
-  - component: {fileID: 4491962618484875499}
+  - component: {fileID: 67362313812095770}
   m_Layer: 0
-  m_Name: Pickup Health
+  m_Name: Booster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -164,22 +163,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 5
---- !u!114 &5498392996214979391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5517628743269936647}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4172e9f172cd8594bb1de8325961cb4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsHeath: 1
-  IsRandom: 0
-  IsInvincible: 0
---- !u!114 &4491962618484875499
+--- !u!114 &67362313812095770
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -191,9 +175,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f4b2c990a192b41afb736a919b62f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lifeTime: 10
   booster:
     effectType: 0
     boosterSpr: {fileID: 0}
     value: 0
     rate: 0
-  boosterSpr: {fileID: 0}
+  boosterSpr: {fileID: 8236300735053138297}
