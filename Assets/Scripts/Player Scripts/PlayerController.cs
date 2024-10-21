@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public const int MOVE_SPEED = 4;
+
     [Header("Movement System")]
         [SerializeField] private Rigidbody2D PlayerRB;
         [SerializeField] private float MoveSpeed, JumpForce;
@@ -37,6 +39,7 @@ public class PlayerController : MonoBehaviour
         private SpriteRenderer PlayerAppearance;
         private float CurrentDashTime = 0;
         private float CurrentDashCoolDown = 0;
+
 
     void Start()
     {
@@ -87,6 +90,18 @@ public class PlayerController : MonoBehaviour
             Shadow.color = new Color(1, 1, 1, 0.05f);
         }
         
+    }
+
+    public void IncreasePlayerSpeed(float speed)
+    {
+        CancelInvoke(nameof(ReturnDefaultSpeed));
+        this.MoveSpeed = speed;
+        Invoke(nameof(ReturnDefaultSpeed), 10);
+    }
+
+    private void ReturnDefaultSpeed()
+    {
+        this.MoveSpeed = MOVE_SPEED;
     }
 
     public void DashSystem(InputAction.CallbackContext context) 

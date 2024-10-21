@@ -35,17 +35,17 @@ public class BoosterManager : MonoBehaviour
         return null;
     }
 
-    public void ActivateBooster(Booster booster, PlayerHealth playerHealth)
+    public void ActivateBooster(Booster booster, PlayerSystem playerSystem)
     {
         switch (booster.effectType)
         {
             case BoosterEffectType.IncreaseHP:
-                playerHealth.HealMode();
+                playerSystem.IncreaseHp(booster.value);
                 Debug.Log("Increased HP by: " + booster.value);
                 break;
 
             case BoosterEffectType.IncreaseSpeed:
-                //Player.Instance.AddSpeed(booster.value);
+                playerSystem.ChangeSpeed(booster.value);
                 Debug.Log("Increased Speed by: " + booster.value);
                 break;
 
@@ -55,7 +55,7 @@ public class BoosterManager : MonoBehaviour
                 break;
 
             case BoosterEffectType.BecomeInvisible:
-                playerHealth.ActiveGodMode();
+                playerSystem.BecomeInvisible(booster.value);
                 Debug.Log("Became Invisible for: " + booster.value + " seconds");
                 break;
 

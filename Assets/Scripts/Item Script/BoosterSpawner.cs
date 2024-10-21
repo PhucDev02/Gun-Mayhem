@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -8,7 +9,7 @@ public class BoosterSpawner : MonoBehaviour
     private GameObject boosterPrefab;
     [SerializeField]
     public float spawnInterval = 5f;
-    private CancellationTokenSource cancellationTokenSource;
+    private CancellationTokenSource cancellationTokenSource = new();
 
     private void Start()
     {
@@ -41,20 +42,19 @@ public class BoosterSpawner : MonoBehaviour
         }
         catch (TaskCanceledException)
         {
+            Debug.Log("Task was canceled");
         }
     }
 
     private Vector3 GetRandomSpawnPosition()
     {
         float x = Random.Range(-14f, 14f);
-        float y = 8f;
-        float z = Random.Range(-10f, 10f);
-        return new Vector3(x, y, z);
+        float y = 12f;
+        return new Vector3(x, y);
     }
 
     void OnDestroy()
     {
         cancellationTokenSource.Cancel();
-        cancellationTokenSource.Dispose();
     }
 }

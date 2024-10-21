@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Foundation.Game.Core.Singleton;
 using UnityEngine;
 
 public enum PoolObject
@@ -10,10 +9,23 @@ public enum PoolObject
     TowerBullet
 }
 
-public class ObjectPool : Singleton<ObjectPool>
+public class ObjectPool : MonoBehaviour
 {
     [SerializeField] private Pool[] Pools;
+    public static ObjectPool Instance;
     private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+    private void Start()
     {
         foreach (var pool in Pools)
         {
@@ -25,6 +37,7 @@ public class ObjectPool : Singleton<ObjectPool>
             }
         }
     }
+
     private GameObject CreateGameObject(GameObject prefab)
     {
 
@@ -42,7 +55,7 @@ public class ObjectPool : Singleton<ObjectPool>
             {
                 foreach (var obj in pool.ListObject)
                 {
-                    if (!obj.activeInHierarchy)
+                    if (!obj.activeInHierarchy) 
                     {
                         obj.SetActive(true);
                         obj.transform.SetParent(this.transform);
@@ -71,9 +84,10 @@ public class ObjectPool : Singleton<ObjectPool>
     }
     public void Recall(GameObject obj)
     {
+        if (obj == null) return;
         obj.transform.SetParent(transform);
-        obj.transform.localPosition = Vector3.zero;
-        obj.transform.localScale = Vector3.one;
+        //obj.transform.localPosition = Vector3.zero;
+        //obj.transform.localScale = Vector3.one;
         obj.SetActive(false);
     }
 

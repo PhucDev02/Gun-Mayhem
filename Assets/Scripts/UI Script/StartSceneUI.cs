@@ -9,7 +9,8 @@ public class StartSceneUI : MonoBehaviour
     [SerializeField] private GameObject tutorialUI;
     public void OnClickPlay()
     {
-        SceneManager.LoadScene("SampleScene");
+        //SceneManager.LoadScene("GameplayScene");
+        MessageSystem.TriggerEvent(MessageKey.SceneManager.ChangeScene, SceneName.GameplayScene);
     }
     public void OnClickTutorial()
     {

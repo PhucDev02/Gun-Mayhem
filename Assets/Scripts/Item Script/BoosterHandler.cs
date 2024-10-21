@@ -8,18 +8,29 @@ public class BoosterHandler : MonoBehaviour
     [SerializeField] private int lifeTime = 10;
     [SerializeField] private Booster booster;
     [SerializeField] private SpriteRenderer boosterSpr;
+    private CancellationTokenSource cancellationTokenSource = new();
+
 
     public async void Init()
     {
-        Debug.Log("Booster appeared");
-        await Task.Delay(lifeTime * 1000);
-        Debug.Log("Booster disappeared");
-        DeactiveBooster();
+        try
+        {
+            await Task.Delay(lifeTime * 1000, cancellationTokenSource.Token);
+            DeactiveBooster();
+        }
+        catch (TaskCanceledException)
+        {
+            Debug.Log("Task was canceled");
+        }
     }
 
     private void DeactiveBooster()
     {
-        ObjectPool.Instance?.Recall(gameObject);
+        if(gameObject != null)
+        {
+            ObjectPool.Instance?.Recall(gameObject);
+            CallCancellationTokenSource();
+        }
     }
 
     public void SetBooster(Booster booster)
@@ -36,10 +47,19 @@ public class BoosterHandler : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Player"))
         {
-            PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
-            BoosterManager.Instance.ActivateBooster(booster, playerHealth);
-            ObjectPool.Instance?.Recall(gameObject);
-
+            PlayerSystem playerSystem = collision.gameObject.GetComponent<PlayerSystem>();
+            BoosterManager.Instance.ActivateBooster(booster, playerSystem);
+            DeactiveBooster();
         }
+    }
+
+    private void CallCancellationTokenSource()
+    {
+        cancellationTokenSource.Cancel();
+    }
+
+    void OnDestroy()
+    {
+        CallCancellationTokenSource();
     }
 }
