@@ -1,10 +1,12 @@
+using DG.Tweening;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
 public class BulletLogic : MonoBehaviour
 {
-    [SerializeField] private float MoveSpeed = 5f;
+    [SerializeField] private float StartSpeed = 10f;
     [SerializeField] private GameObject LockedTarget;
+    [SerializeField] private SpriteRenderer sr;
     private bool Locked = false;
     [SerializeField] private Rigidbody2D BulletRB;
     private int target;
@@ -52,27 +54,31 @@ public class BulletLogic : MonoBehaviour
 
     //    Invoke(nameof(ReleaseBullet), 4f);
     //}
-
+    private void OnEnable()
+    {
+        sr.color = Color.white;
+    }
     public void ArrestPlayer(GameObject player)
     {
         if (player)
         {
             LockedTarget = player;
             direction = (player.transform.position - transform.position).normalized;
+            BulletRB.linearVelocity = direction * StartSpeed;
         }
         else
         {
             ReleaseBullet();
         }
 
-        Invoke(nameof(ReleaseBullet), 4f);
+        Invoke(nameof(ReleaseBullet), 2f);
     }
     void Update()
     {
         if (LockedTarget != null)
         {
-            BulletRB.linearVelocity = direction * MoveSpeed;
-
+            //BulletRB.linearVelocity = direction * StartSpeed;
+            BulletRB.linearVelocity = Vector2.Lerp(BulletRB.linearVelocity, BulletRB.linearVelocity / 2, Time.deltaTime * 2);
         }
     }
 
@@ -81,7 +87,7 @@ public class BulletLogic : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             PlayerHealth TargetHealth = collision.GetComponent<PlayerHealth>();
-            if (TargetHealth != null) 
+            if (TargetHealth != null)
             {
                 TargetHealth.TakeDamage(1);
             }
@@ -91,7 +97,10 @@ public class BulletLogic : MonoBehaviour
 
     private void ReleaseBullet()
     {
-        CancelInvoke(nameof(ReleaseBullet));
-        ObjectPool.Instance.Recall(gameObject);
+        sr.DOFade(0, 0.5f).OnComplete(() =>
+        {
+            CancelInvoke(nameof(ReleaseBullet));
+            ObjectPool.Instance.Recall(gameObject);
+        });
     }
 }

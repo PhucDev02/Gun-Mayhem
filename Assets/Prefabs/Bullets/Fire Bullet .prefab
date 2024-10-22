@@ -161,8 +161,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c83504630f042d6428eb29dbf30f0390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 3
+  StartSpeed: 15
   LockedTarget: {fileID: 0}
+  sr: {fileID: 7706457714046881607}
   BulletRB: {fileID: -187224131589748656}
 --- !u!50 &-187224131589748656
 Rigidbody2D:
