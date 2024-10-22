@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour, IPlayer
 {
     [SerializeField] InputSetting inputSetting;
+    public const int MOVE_SPEED = 4;
+
     [Header("Movement System")]
     [SerializeField] private Rigidbody2D PlayerRB;
     [SerializeField] private float MoveSpeed, JumpForce;
@@ -90,7 +92,19 @@ public class PlayerController : MonoBehaviour, IPlayer
 
     }
 
-    public void DashSystem(InputAction.CallbackContext context)
+    public void IncreasePlayerSpeed(float speed)
+    {
+        CancelInvoke(nameof(ReturnDefaultSpeed));
+        this.MoveSpeed = speed;
+        Invoke(nameof(ReturnDefaultSpeed), 10);
+    }
+
+    private void ReturnDefaultSpeed()
+    {
+        this.MoveSpeed = MOVE_SPEED;
+    }
+
+    public void DashSystem(InputAction.CallbackContext context) 
     {
         if (context.started && CurrentDashCoolDown <= 0)
         {

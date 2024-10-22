@@ -11,44 +11,61 @@ public class BulletLogic : MonoBehaviour
     private GameObject[] Targets;
 
     private Vector2 direction;
-    void Start()
+    //void Start()
+    //{
+    //    target = Random.Range(1, 3);
+    //    Targets = GameObject.FindGameObjectsWithTag("Player");
+    //    if (!Locked)
+    //    {
+    //        if (target == 1)
+    //        {
+    //            if (Targets.Length == 0)
+    //            {
+    //                ReleaseBullet();
+    //            }
+    //            else
+    //            {
+    //                LockedTarget = Targets[0];
+    //            }
+    //        }
+    //        else if (target == 2)
+    //        {
+    //            if (Targets.Length < 2)
+    //            {
+    //                ReleaseBullet();
+    //            }
+    //            else
+    //            {
+    //                LockedTarget = Targets[1];
+    //            }
+    //        }
+    //        Locked = true;
+    //    }
+    //    if (LockedTarget)
+    //    {
+    //        direction = (LockedTarget.transform.position - transform.position).normalized;
+    //    }
+    //    else
+    //    {
+    //        ReleaseBullet();
+    //    }
+
+    //    Invoke(nameof(ReleaseBullet), 4f);
+    //}
+
+    public void ArrestPlayer(GameObject player)
     {
-        target = Random.Range(1, 3);
-        Targets = GameObject.FindGameObjectsWithTag("Player");
-        if (!Locked)
+        if (player)
         {
-            if (target == 1)
-            {
-                if (Targets.Length == 0)
-                {
-                    Destroy(this.gameObject);
-                }
-                else
-                {
-                    LockedTarget = Targets[0];
-                }
-            }
-            else if (target == 2)
-            {
-                if (Targets.Length < 2)
-                {
-                    Destroy(this.gameObject);
-                }
-                else
-                {
-                    LockedTarget = Targets[1];
-                }
-            }
-            Locked = true;
-        }
-        if (LockedTarget)
-        {
-            direction = (LockedTarget.transform.position - transform.position).normalized;
+            LockedTarget = player;
+            direction = (player.transform.position - transform.position).normalized;
         }
         else
         {
-            Destroy (this.gameObject);
+            ReleaseBullet();
         }
+
+        Invoke(nameof(ReleaseBullet), 4f);
     }
     void Update()
     {
@@ -56,7 +73,6 @@ public class BulletLogic : MonoBehaviour
         {
             BulletRB.linearVelocity = direction * MoveSpeed;
 
-            Destroy(this.gameObject, 3.4f);
         }
     }
 
@@ -69,12 +85,13 @@ public class BulletLogic : MonoBehaviour
             {
                 TargetHealth.TakeDamage(1);
             }
-            Destroy(this.gameObject); 
+            ReleaseBullet();
         }
     }
 
-    private void OnDestroy()
+    private void ReleaseBullet()
     {
-        // Optional: Cleanup or effects before the bullet is destroyed
+        CancelInvoke(nameof(ReleaseBullet));
+        ObjectPool.Instance.Recall(gameObject);
     }
 }

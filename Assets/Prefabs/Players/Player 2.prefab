@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 1320182584699804087}
   - component: {fileID: 5708042533916280744}
   - component: {fileID: 8570124552543253748}
+  - component: {fileID: 8081283638348359570}
   m_Layer: 7
   m_Name: Player 2
   m_TagString: Player
@@ -628,6 +629,20 @@ MonoBehaviour:
   CurrentHealth: 0
   InvincibilityTime: 1
   Explode: {fileID: 8933048366317599467, guid: f31ccce7eb203194fb06cd9b36a75fdc, type: 3}
+--- !u!114 &8081283638348359570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3775668903009342077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb8225c5dca696e4aba92f98051a3b7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHealth: {fileID: 8570124552543253748}
+  playerController: {fileID: 2848628057934659330}
 --- !u!1 &6031089285016570601
 GameObject:
   m_ObjectHideFlags: 0
