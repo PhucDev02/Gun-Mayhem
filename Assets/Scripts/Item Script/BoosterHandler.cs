@@ -15,6 +15,7 @@ public class BoosterHandler : MonoBehaviour
     {
         try
         {
+            cancellationTokenSource = new();
             await Task.Delay(lifeTime * 1000, cancellationTokenSource.Token);
             DeactiveBooster();
         }
@@ -28,8 +29,8 @@ public class BoosterHandler : MonoBehaviour
     {
         if(gameObject != null)
         {
-            ObjectPool.Instance?.Recall(gameObject);
             CallCancellationTokenSource();
+            ObjectPool.Instance?.Recall(gameObject);
         }
     }
 

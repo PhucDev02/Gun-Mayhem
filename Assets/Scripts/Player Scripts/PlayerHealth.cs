@@ -12,9 +12,6 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private Image healthUI;
     [SerializeField] private GameObject godModeSymbol;
 
-    [Tooltip("Time duration for God Mode in seconds")]
-    [SerializeField] private float godModeDuration = 5f;
-
     private int currentHealth;
     private float godModeTimer;
     public int CurrentHealth { get => currentHealth; set => currentHealth = value; }

@@ -140,13 +140,15 @@ public class PlayerController : MonoBehaviour
         // x axis is equal to A and D or Left and Right buttons (-1 to 1 just like Input.GetAxisRaw in old input system)
 
         PlayerVelocity_X = context.ReadValue<Vector2>().x;
+        Debug.LogError("Movement dirX: " + PlayerVelocity_X);
 
         
     }
 
     public void NewInputSystem_PlayerJump(InputAction.CallbackContext context)
     {
-        if (context.started && IsGrounded == true && CurrentDashTime <= 0 ) // <=> This kinda same with Input.GetButtonDown, which only active when you start press some button
+        if (context.started && IsGrounded == true && CurrentDashTime <= 0 ) // <=> This kinda same with Input.GetButtonDown,
+                                                                            // which only active when you start press some button
         {
             PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, JumpForce);
         }
