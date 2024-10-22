@@ -47,7 +47,7 @@ public class PlayerHealth : MonoBehaviour
 
     void Update()
     {
-        healthSlider.value = currentHealth;
+        healthSlider.value = Mathf.Lerp(healthSlider.value,currentHealth,10f*Time.deltaTime);
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
         HandleGodMode();

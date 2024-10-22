@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class PlayerController : MonoBehaviour, IPlayer
 {
     [SerializeField] InputSetting inputSetting;
+    [SerializeField] PoolObjectTag bulletTag;
     public const int MOVE_SPEED = 4;
 
     [Header("Movement System")]
@@ -50,7 +53,10 @@ public class PlayerController : MonoBehaviour, IPlayer
 
     void Update()
     {
-        PlayerMovement();
+        UpdateMovement();
+        UpdateAttack();
+        UpdateJump();
+        UpdateDash();
         RankIcon.transform.rotation = Quaternion.Euler(0, 0, 0);
 
         IsGrounded = Physics2D.OverlapCircle(GroundCheckPoint.transform.position, CheckRadius, WhatIsGround);
@@ -92,27 +98,7 @@ public class PlayerController : MonoBehaviour, IPlayer
 
     }
 
-    public void IncreasePlayerSpeed(float speed)
-    {
-        CancelInvoke(nameof(ReturnDefaultSpeed));
-        this.MoveSpeed = speed;
-        Invoke(nameof(ReturnDefaultSpeed), 10);
-    }
-
-    private void ReturnDefaultSpeed()
-    {
-        this.MoveSpeed = MOVE_SPEED;
-    }
-
-    public void DashSystem(InputAction.CallbackContext context) 
-    {
-        if (context.started && CurrentDashCoolDown <= 0)
-        {
-            CurrentDashTime = DashTime;
-            CurrentDashCoolDown = DashCoolDown;
-        }
-    }
-    private void PlayerMovement()
+    private void UpdateMovement()
     {
         PlayerVelocity_X = 0;
         if (Input.GetKey(inputSetting.left))
@@ -133,53 +119,56 @@ public class PlayerController : MonoBehaviour, IPlayer
         AnimationController.SetFloat("Horizontal Input", Mathf.Abs(PlayerVelocity_X));
         AnimationController.SetFloat("Y Velocity", PlayerRB.linearVelocity.y);
 
-        //if (PlayerVelocity_X > 0.1)
-        //{
-        //    this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-        //}
-
-        //if (PlayerVelocity_X < -0.1)
-        //{
-        //    this.gameObject.transform.rotation = Quaternion.Euler(0, -180, 0);
-        //}
+    }
+    private void UpdateDash()
+    {
+        if (Input.GetKeyDown(inputSetting.dash) && CurrentDashCoolDown <= 0)
+        {
+            CurrentDashTime = DashTime;
+            CurrentDashCoolDown = DashCoolDown;
+        }
     }
 
-    public void NewInputSystem_PlayerMovement(InputAction.CallbackContext context) // context is the value that store user input
+    private void UpdateJump()
     {
-        // Explain code for you guys to understand
-        // As you can see there are Player1 and Player2 Input controllers in the unity editor
-        // Inside that I already set WASD Vector2 Digital normalize which will gather user input as a Vector2
-        // x axis is equal to A and D or Left and Right buttons (-1 to 1 just like Input.GetAxisRaw in old input system)
-
-        PlayerVelocity_X = context.ReadValue<Vector2>().x;
-        Debug.Log(PlayerVelocity_X);
-
-    }
-
-    public void NewInputSystem_PlayerJump(InputAction.CallbackContext context)
-    {
-        if (context.started && IsGrounded == true && CurrentDashTime <= 0) // <=> This kinda same with Input.GetButtonDown, which only active when you start press some button
+        if (!Input.GetKeyDown(inputSetting.jump)) return;
+        if (IsGrounded == true && CurrentDashTime <= 0)
         {
             PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, JumpForce);
         }
 
-        if (context.started && IsGrounded == false && Abled2DoubleJump == true && CurrentDashTime <= 0)
+        if (IsGrounded == false && Abled2DoubleJump == true && CurrentDashTime <= 0)
         {
             PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, JumpForce);
             Abled2DoubleJump = false;
         }
     }
 
-    public void NewInputSystem_PlayerAttack(InputAction.CallbackContext context)
+    private void UpdateAttack()
     {
-        if (context.started && CurrentAttackCoolDown <= 0)
+        if (Input.GetKey(inputSetting.attack) && CurrentAttackCoolDown <= 0)
         {
             AnimationController.SetTrigger("Attack");
             Audio.PlayOneShot(AttackSound);
-            Instantiate(Bullet, AttackPoint.transform.position, AttackPoint.transform.rotation);
+            var bullet= ObjectPool.Instance.Spawn(bulletTag);
+            bullet.transform.SetLocalPositionAndRotation(AttackPoint.transform.position, AttackPoint.transform.rotation);
+            //Instantiate(Bullet, AttackPoint.transform.position, AttackPoint.transform.rotation);
             CurrentAttackCoolDown = AttackCoolDown;
         }
     }
+
+    public void IncreasePlayerSpeed(float speed)
+    {
+        CancelInvoke(nameof(ReturnDefaultSpeed));
+        this.MoveSpeed = speed;
+        Invoke(nameof(ReturnDefaultSpeed), 10);
+    }
+
+    private void ReturnDefaultSpeed()
+    {
+        this.MoveSpeed = MOVE_SPEED;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
