@@ -6313,6 +6313,18 @@ MonoBehaviour:
     Expandable: 0
     ListObject:
     - {fileID: 0}
+  - objectTag: 2
+    Prefab: {fileID: 429409577989541558, guid: 186c89915ac96cc48b6751e0ce324d7b, type: 3}
+    Size: 4
+    Expandable: 1
+    ListObject:
+    - {fileID: 0}
+  - objectTag: 3
+    Prefab: {fileID: 577619396356555451, guid: bcc312035bf42724d93422f932d40ac7, type: 3}
+    Size: 4
+    Expandable: 1
+    ListObject:
+    - {fileID: 0}
 --- !u!1 &1927467612
 GameObject:
   m_ObjectHideFlags: 0

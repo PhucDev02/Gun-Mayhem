@@ -3,28 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PoolObject
+public enum PoolObjectTag
 {
     Booster,
-    TowerBullet
+    TowerBullet,
+    Bullet1,
+    Bullet2,
 }
 
-public class ObjectPool : MonoBehaviour
+public class ObjectPool : Singleton<ObjectPool>
 {
     [SerializeField] private Pool[] Pools;
-    public static ObjectPool Instance;
-    private void Awake()
-    {
-        if(Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
-    }
-
     private void Start()
     {
         foreach (var pool in Pools)
@@ -47,7 +36,7 @@ public class ObjectPool : MonoBehaviour
         return obj;
     }
 
-    public GameObject Spawn(PoolObject tag)
+    public GameObject Spawn(PoolObjectTag tag)
     {
         foreach (var pool in Pools)
         {
@@ -105,7 +94,7 @@ public class ObjectPool : MonoBehaviour
 [Serializable]
 public class Pool
 {
-    public PoolObject objectTag;
+    public PoolObjectTag objectTag;
     public GameObject Prefab;
 
     public int Size = 1;

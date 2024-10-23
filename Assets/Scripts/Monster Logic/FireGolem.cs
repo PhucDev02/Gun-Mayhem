@@ -46,7 +46,7 @@ public class FireGolem : MonoBehaviour
         {
             if (targets[i] != null)
             {
-                var bullet = ObjectPool.Instance.Spawn(PoolObject.TowerBullet);
+                var bullet = ObjectPool.Instance.Spawn(PoolObjectTag.TowerBullet);
                 bullet.transform.position = transform.position;
                 bullet.GetComponent<BulletLogic>().ArrestPlayer(targets[i]);
             }
