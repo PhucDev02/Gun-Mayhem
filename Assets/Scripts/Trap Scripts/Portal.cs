@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WarpLogic : MonoBehaviour
+public class Portal : MonoBehaviour
 {
     [SerializeField] private GameObject TeleportTargetPoint;
 

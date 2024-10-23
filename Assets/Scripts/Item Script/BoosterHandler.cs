@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class BoosterHandler : MonoBehaviour
     {
         try
         {
+            cancellationTokenSource = new();
             await Task.Delay(lifeTime * 1000, cancellationTokenSource.Token);
             DeactiveBooster();
         }
@@ -26,10 +28,13 @@ public class BoosterHandler : MonoBehaviour
 
     private void DeactiveBooster()
     {
-        if(gameObject != null)
+        if (gameObject != null)
         {
-            ObjectPool.Instance?.Recall(gameObject);
-            CallCancellationTokenSource();
+            boosterSpr.DOFade(0, 0.1f).SetLoops(10, LoopType.Yoyo).OnComplete(() =>
+            {
+                ObjectPool.Instance?.Recall(gameObject);
+                CallCancellationTokenSource();
+            });
         }
     }
 

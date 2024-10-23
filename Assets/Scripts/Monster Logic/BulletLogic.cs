@@ -58,13 +58,16 @@ public class BulletLogic : MonoBehaviour
     {
         sr.color = Color.white;
     }
+    const float thresholdMagnitude = 18f;
     public void ArrestPlayer(GameObject player)
     {
         if (player)
         {
             LockedTarget = player;
             direction = (player.transform.position - transform.position).normalized;
-            BulletRB.linearVelocity = direction * StartSpeed;
+            float factor = (player.transform.position - transform.position).magnitude/ thresholdMagnitude;
+            Debug.Log(factor);
+            BulletRB.linearVelocity = direction * StartSpeed*factor;
         }
         else
         {
@@ -78,7 +81,7 @@ public class BulletLogic : MonoBehaviour
         if (LockedTarget != null)
         {
             //BulletRB.linearVelocity = direction * StartSpeed;
-            BulletRB.linearVelocity = Vector2.Lerp(BulletRB.linearVelocity, BulletRB.linearVelocity / 2, Time.deltaTime * 2);
+            BulletRB.linearVelocity = Vector2.Lerp(BulletRB.linearVelocity, BulletRB.linearVelocity / 1.5f, Time.deltaTime * 2.5f);
         }
     }
 

@@ -245,7 +245,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 37
-        y: 93
+        y: 94
         width: 34
         height: 34
       alignment: 0
@@ -332,9 +332,9 @@ TextureImporter:
       name: JumpPad Up
       rect:
         serializedVersion: 2
-        x: 19
+        x: 18
         y: 74
-        width: 16
+        width: 18
         height: 13
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -354,9 +354,9 @@ TextureImporter:
       name: Button Down
       rect:
         serializedVersion: 2
-        x: 37
+        x: 36
         y: 74
-        width: 16
+        width: 18
         height: 9
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -376,9 +376,9 @@ TextureImporter:
       name: Button Up
       rect:
         serializedVersion: 2
-        x: 55
+        x: 54
         y: 74
-        width: 16
+        width: 18
         height: 12
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -442,9 +442,9 @@ TextureImporter:
       name: Pickup Gravity
       rect:
         serializedVersion: 2
-        x: 39
+        x: 38
         y: 58
-        width: 12
+        width: 13
         height: 13
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
