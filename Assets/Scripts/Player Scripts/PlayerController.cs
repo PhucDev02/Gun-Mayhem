@@ -1,10 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class PlayerController : MonoBehaviour, IPlayer
 {
@@ -103,12 +97,12 @@ public class PlayerController : MonoBehaviour, IPlayer
         PlayerVelocity_X = 0;
         if (Input.GetKey(inputSetting.left))
         {
-            PlayerVelocity_X = -1;
+            Move(-1);
             this.gameObject.transform.rotation = Quaternion.Euler(0, -180, 0);
         }
         if (Input.GetKey(inputSetting.right))
         {
-            PlayerVelocity_X = 1;
+            Move(1);
             this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
 
@@ -124,36 +118,21 @@ public class PlayerController : MonoBehaviour, IPlayer
     {
         if (Input.GetKeyDown(inputSetting.dash) && CurrentDashCoolDown <= 0)
         {
-            CurrentDashTime = DashTime;
-            CurrentDashCoolDown = DashCoolDown;
+            Dash();
         }
     }
 
     private void UpdateJump()
     {
         if (!Input.GetKeyDown(inputSetting.jump)) return;
-        if (IsGrounded == true && CurrentDashTime <= 0)
-        {
-            PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, JumpForce);
-        }
-
-        if (IsGrounded == false && Abled2DoubleJump == true && CurrentDashTime <= 0)
-        {
-            PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, JumpForce);
-            Abled2DoubleJump = false;
-        }
+        Jump();
     }
 
     private void UpdateAttack()
     {
         if (Input.GetKey(inputSetting.attack) && CurrentAttackCoolDown <= 0)
         {
-            AnimationController.SetTrigger("Attack");
-            Audio.PlayOneShot(AttackSound);
-            var bullet= ObjectPool.Instance.Spawn(bulletTag);
-            bullet.transform.SetLocalPositionAndRotation(AttackPoint.transform.position, AttackPoint.transform.rotation);
-            //Instantiate(Bullet, AttackPoint.transform.position, AttackPoint.transform.rotation);
-            CurrentAttackCoolDown = AttackCoolDown;
+            Attack();
         }
     }
 
@@ -177,21 +156,40 @@ public class PlayerController : MonoBehaviour, IPlayer
 
     public void Move(float dir)
     {
-        throw new System.NotImplementedException();
+        PlayerVelocity_X = dir;
     }
 
     public void Jump()
     {
-        throw new System.NotImplementedException();
+        if (IsGrounded == true && CurrentDashTime <= 0)
+        {
+            PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, JumpForce);
+        }
+
+        if (IsGrounded == false && Abled2DoubleJump == true && CurrentDashTime <= 0)
+        {
+            PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, JumpForce);
+            Abled2DoubleJump = false;
+        }
     }
 
-    public void Attack(int damage)
+    public void Attack()
     {
-        throw new System.NotImplementedException();
+        AnimationController.SetTrigger("Attack");
+        Audio.PlayOneShot(AttackSound);
+        var bullet = ObjectPool.Instance.Spawn(bulletTag);
+        bullet.transform.SetLocalPositionAndRotation(AttackPoint.transform.position, AttackPoint.transform.rotation);
+        //Instantiate(Bullet, AttackPoint.transform.position, AttackPoint.transform.rotation);
+        CurrentAttackCoolDown = AttackCoolDown;
     }
 
     public void TakeDamage(int damage)
     {
-        throw new System.NotImplementedException();
+    }
+
+    public void Dash()
+    {
+        CurrentDashTime = DashTime;
+        CurrentDashCoolDown = DashCoolDown;
     }
 }
