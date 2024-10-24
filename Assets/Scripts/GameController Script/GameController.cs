@@ -12,7 +12,6 @@ public enum EPlayer
 
 public class GameController : Singleton<GameController>
 {
-    public static GameController Instance;
     private static EPlayer winner;
     [SerializeField] private PlayerHealth[] players;
 

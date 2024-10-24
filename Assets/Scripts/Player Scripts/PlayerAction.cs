@@ -3,45 +3,19 @@ using UnityEngine;
 public class PlayerAction : MonoBehaviour, IPlayerAction
 {
     private PlayerController controller;
-    [SerializeField] InputSetting inputSetting;
-    [SerializeField] PoolObjectTag bulletTag;
-
-    [Header("Movement System")]
-    [SerializeField] private Rigidbody2D PlayerRB;
+    
     [SerializeField] private float MoveSpeed;
-    private float PlayerVelocity_X;
+    private float velocity_X;
 
-    [Header("Jumping System")]
-    [SerializeField] private GameObject GroundCheckPoint;
-    [SerializeField] private LayerMask WhatIsGround;
     private bool IsGrounded;
     private bool Abled2DoubleJump;
 
-    [Header("Animation System")]
-    private Animator AnimationController;
-    [SerializeField] public GameObject RankIcon;
-
-    [Header("Attack System")]
-    [SerializeField] private GameObject AttackPoint;
-    [SerializeField] private GameObject Bullet;
-    [SerializeField] private AudioClip AttackSound;
     private float CurrentAttackCoolDown = 0;
-    private AudioSource Audio;
-
-    [Header("Dash System")]
-    [SerializeField] private GameObject DashEffect;
-    private SpriteRenderer PlayerAppearance;
     private float CurrentDashTime = 0;
     private float CurrentDashCoolDown = 0;
     private void Start()
     {
         controller = GetComponent<PlayerController>();
-    }
-    void OnValidate()
-    {
-        AnimationController = this.gameObject.GetComponent<Animator>();
-        PlayerAppearance = this.gameObject.GetComponent<SpriteRenderer>();
-        Audio = this.gameObject.GetComponent<AudioSource>();
     }
 
     void Update()
@@ -50,9 +24,8 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
         UpdateAttack();
         UpdateJump();
         UpdateDash();
-        RankIcon.transform.rotation = Quaternion.Euler(0, 0, 0);
 
-        IsGrounded = Physics2D.OverlapCircle(GroundCheckPoint.transform.position, ConstValue.groundRadiusCheck, WhatIsGround);
+        IsGrounded = controller.reference.IsOnGround();
 
         if (IsGrounded == true)
         {
@@ -60,63 +33,47 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
         }
 
         CurrentDashTime -= Time.deltaTime;
-
-        if (CurrentDashTime < 0)
-        {
-            CurrentDashTime = 0;
-        }
+        CurrentDashTime = Mathf.Max(CurrentDashTime, 0);
 
         CurrentDashCoolDown -= Time.deltaTime;
-
-        if (CurrentDashCoolDown < 0)
-        {
-            CurrentDashCoolDown = 0;
-        }
+        CurrentDashCoolDown = Mathf.Max(CurrentDashCoolDown, 0);
 
         CurrentAttackCoolDown -= Time.deltaTime;
-
-        if (CurrentAttackCoolDown < 0)
-        {
-            CurrentAttackCoolDown = 0;
-        }
+        CurrentAttackCoolDown = Mathf.Max(CurrentAttackCoolDown, 0);
         //dash
-        if (CurrentDashTime > 0 && Mathf.Abs(PlayerVelocity_X) > 0)
+        if (CurrentDashTime > 0 && Mathf.Abs(velocity_X) > 0)
         {
-            Debug.Log(1);
-            PlayerRB.linearVelocity = new Vector2(PlayerVelocity_X * 3 * MoveSpeed, 0);
-            GameObject Effect = Instantiate(DashEffect, this.gameObject.transform.position, this.gameObject.transform.rotation);
-            SpriteRenderer Shadow = Effect.GetComponent<SpriteRenderer>();
-            Shadow.sprite = PlayerAppearance.sprite;
-            Shadow.color = new Color(1, 1, 1, 0.5f);
+            controller.reference.SetVelocity(velocity_X * 3 * MoveSpeed, 0);
+            controller.reference.PresentDashShadow();
         }
 
     }
 
     private void UpdateMovement()
     {
-        PlayerVelocity_X = 0;
-        if (Input.GetKey(inputSetting.left))
+        velocity_X = 0;
+        if (Input.GetKey(controller.reference.inputSetting.left))
         {
             Move(-1);
             this.gameObject.transform.rotation = Quaternion.Euler(0, -180, 0);
         }
-        if (Input.GetKey(inputSetting.right))
+        if (Input.GetKey(controller.reference.inputSetting.right))
         {
             Move(1);
             this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
 
         // Movement
-        PlayerRB.linearVelocity = new Vector2(PlayerVelocity_X * MoveSpeed, PlayerRB.linearVelocity.y);
 
-        AnimationController.SetBool("IsGrounded", IsGrounded);
-        AnimationController.SetFloat("Horizontal Input", Mathf.Abs(PlayerVelocity_X));
-        AnimationController.SetFloat("Y Velocity", PlayerRB.linearVelocity.y);
+        controller.reference.SetVelocity(velocity_X * MoveSpeed,float.MaxValue);
+        controller.reference.Animator.SetBool("IsGrounded", IsGrounded);
+        controller.reference.Animator.SetFloat("Horizontal Input", Mathf.Abs(velocity_X));
+        controller.reference.Animator.SetFloat("Y Velocity", controller.reference.Rb.linearVelocity.y);
 
     }
     private void UpdateDash()
     {
-        if (Input.GetKeyDown(inputSetting.dash) && CurrentDashCoolDown <= 0)
+        if (Input.GetKeyDown(controller.reference.inputSetting.dash) && CurrentDashCoolDown <= 0)
         {
             Dash();
         }
@@ -124,22 +81,22 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
 
     private void UpdateJump()
     {
-        if (!Input.GetKeyDown(inputSetting.jump)) return;
+        if (!Input.GetKeyDown(controller.reference.inputSetting.jump)) return;
         Jump();
     }
 
     private void UpdateAttack()
     {
-        if (Input.GetKey(inputSetting.attack) && CurrentAttackCoolDown <= 0)
+        if (Input.GetKey(controller.reference.inputSetting.attack) && CurrentAttackCoolDown <= 0)
         {
             RangedAttack();
         }
     }
 
-    public void IncreasePlayerSpeed(float speed)
+    public void IncreasePlayerSpeed(float multiplier)
     {
         CancelInvoke(nameof(ReturnDefaultSpeed));
-        this.MoveSpeed = speed;
+        this.MoveSpeed = multiplier*ConstValue.moveSpeed;
         Invoke(nameof(ReturnDefaultSpeed), 10);
     }
 
@@ -149,29 +106,26 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
     }
     public void Move(float dir)
     {
-        PlayerVelocity_X = dir;
+        velocity_X = dir;
     }
 
     public void Jump()
     {
         if (IsGrounded == true && CurrentDashTime <= 0)
         {
-            PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, ConstValue.jumpForce);
+            controller.reference.SetVelocity(float.MaxValue, ConstValue.jumpForce);
         }
 
         if (IsGrounded == false && Abled2DoubleJump == true && CurrentDashTime <= 0)
         {
-            PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, ConstValue.jumpForce);
+            controller.reference.SetVelocity(float.MaxValue, ConstValue.jumpForce);
             Abled2DoubleJump = false;
         }
     }
 
     public void RangedAttack()
     {
-        AnimationController.SetTrigger("Attack");
-        Audio.PlayOneShot(AttackSound);
-        var bullet = ObjectPool.Instance.Spawn(bulletTag);
-        bullet.transform.SetLocalPositionAndRotation(AttackPoint.transform.position, AttackPoint.transform.rotation);
+        controller.reference.PresentRangeAttack();
         CurrentAttackCoolDown = ConstValue.attackCooldown;
     }
 

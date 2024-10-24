@@ -11,4 +11,6 @@ public class ConstValue
     public const float dashTime = 0.25f;
     public const float dashCoolDownTime = 1f;
     public const float attackCooldown=.5f;
+
+    public static string GroundLayerMask = "Ground";
 }

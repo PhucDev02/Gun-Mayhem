@@ -386,25 +386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d0aaba7d4b03b145910a7b2b9854afb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputSetting:
-    jump: 273
-    left: 276
-    right: 275
-    attack: 256
-    dash: 271
-  bulletTag: 3
-  PlayerRB: {fileID: 4962468331618072544}
   MoveSpeed: 4
-  GroundCheckPoint: {fileID: 6315819145363137751}
-  WhatIsGround:
-    serializedVersion: 2
-    m_Bits: 64
-  CheckRadius: 0.25
-  RankIcon: {fileID: 8780922736285282265}
-  AttackPoint: {fileID: 961156901135645363}
-  Bullet: {fileID: 577619396356555451, guid: bcc312035bf42724d93422f932d40ac7, type: 3}
-  AttackSound: {fileID: 8300000, guid: 6e73b63a6eda3d4468d045985bf9d969, type: 3}
-  DashEffect: {fileID: 2782343568510075173, guid: 301a9d60a1f1e904aaf1ae2130c27552, type: 3}
 --- !u!95 &1320182584699804087
 Animator:
   serializedVersion: 7
@@ -619,28 +601,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputSetting:
-    jump: 0
-    left: 0
-    right: 0
+    jump: 273
+    left: 276
+    right: 275
     attack: 0
     dash: 0
-  bulletTag: 0
-  PlayerRB: {fileID: 0}
-  MoveSpeed: 0
-  JumpForce: 0
-  GroundCheckPoint: {fileID: 0}
-  WhatIsGround:
-    serializedVersion: 2
-    m_Bits: 0
-  CheckRadius: 0
-  RankIcon: {fileID: 0}
-  AttackPoint: {fileID: 0}
-  AttackCoolDown: 0
+  bulletTag: 3
+  Rb: {fileID: 4962468331618072544}
+  GroundCheckPoint: {fileID: 6315819145363137751}
+  Animator: {fileID: 1320182584699804087}
+  AttackPoint: {fileID: 961156901135645363}
   Bullet: {fileID: 0}
-  AttackSound: {fileID: 0}
-  DashTime: 0
-  DashCoolDown: 0
-  DashEffect: {fileID: 0}
+  AttackSound: {fileID: 8300000, guid: 6e73b63a6eda3d4468d045985bf9d969, type: 3}
+  Audio: {fileID: 7630723277271059959}
+  DashEffect: {fileID: 6361257137906712321, guid: 69e0262c963b31f4aaf24e6d2d97d54d, type: 3}
+  Sr: {fileID: 1983416580465423464}
 --- !u!1 &6031089285016570601
 GameObject:
   m_ObjectHideFlags: 0
