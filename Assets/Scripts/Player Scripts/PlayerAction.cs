@@ -8,13 +8,12 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
 
     [Header("Movement System")]
     [SerializeField] private Rigidbody2D PlayerRB;
-    [SerializeField] private float MoveSpeed, JumpForce;
+    [SerializeField] private float MoveSpeed;
     private float PlayerVelocity_X;
 
     [Header("Jumping System")]
     [SerializeField] private GameObject GroundCheckPoint;
     [SerializeField] private LayerMask WhatIsGround;
-    [SerializeField] private float CheckRadius;
     private bool IsGrounded;
     private bool Abled2DoubleJump;
 
@@ -24,15 +23,12 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
 
     [Header("Attack System")]
     [SerializeField] private GameObject AttackPoint;
-    [SerializeField] private float AttackCoolDown;
     [SerializeField] private GameObject Bullet;
     [SerializeField] private AudioClip AttackSound;
     private float CurrentAttackCoolDown = 0;
     private AudioSource Audio;
 
     [Header("Dash System")]
-    [SerializeField] private float DashTime;
-    [SerializeField] private float DashCoolDown;
     [SerializeField] private GameObject DashEffect;
     private SpriteRenderer PlayerAppearance;
     private float CurrentDashTime = 0;
@@ -56,7 +52,7 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
         UpdateDash();
         RankIcon.transform.rotation = Quaternion.Euler(0, 0, 0);
 
-        IsGrounded = Physics2D.OverlapCircle(GroundCheckPoint.transform.position, CheckRadius, WhatIsGround);
+        IsGrounded = Physics2D.OverlapCircle(GroundCheckPoint.transform.position, ConstValue.groundRadiusCheck, WhatIsGround);
 
         if (IsGrounded == true)
         {
@@ -86,11 +82,12 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
         //dash
         if (CurrentDashTime > 0 && Mathf.Abs(PlayerVelocity_X) > 0)
         {
+            Debug.Log(1);
             PlayerRB.linearVelocity = new Vector2(PlayerVelocity_X * 3 * MoveSpeed, 0);
             GameObject Effect = Instantiate(DashEffect, this.gameObject.transform.position, this.gameObject.transform.rotation);
             SpriteRenderer Shadow = Effect.GetComponent<SpriteRenderer>();
             Shadow.sprite = PlayerAppearance.sprite;
-            Shadow.color = new Color(1, 1, 1, 0.05f);
+            Shadow.color = new Color(1, 1, 1, 0.5f);
         }
 
     }
@@ -159,12 +156,12 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
     {
         if (IsGrounded == true && CurrentDashTime <= 0)
         {
-            PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, JumpForce);
+            PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, ConstValue.jumpForce);
         }
 
         if (IsGrounded == false && Abled2DoubleJump == true && CurrentDashTime <= 0)
         {
-            PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, JumpForce);
+            PlayerRB.linearVelocity = new Vector2(PlayerRB.linearVelocity.x, ConstValue.jumpForce);
             Abled2DoubleJump = false;
         }
     }
@@ -175,7 +172,7 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
         Audio.PlayOneShot(AttackSound);
         var bullet = ObjectPool.Instance.Spawn(bulletTag);
         bullet.transform.SetLocalPositionAndRotation(AttackPoint.transform.position, AttackPoint.transform.rotation);
-        CurrentAttackCoolDown = AttackCoolDown;
+        CurrentAttackCoolDown = ConstValue.attackCooldown;
     }
 
     public void TakeDamage(int damage)
@@ -184,8 +181,8 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
 
     public void Dash()
     {
-        CurrentDashTime = DashTime;
-        CurrentDashCoolDown = DashCoolDown;
+        CurrentDashTime = ConstValue.dashTime;
+        CurrentDashCoolDown = ConstValue.dashCoolDownTime;
     }
 
     public void MeleeAttack()

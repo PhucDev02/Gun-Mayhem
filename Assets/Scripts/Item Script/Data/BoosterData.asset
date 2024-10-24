@@ -19,7 +19,7 @@ MonoBehaviour:
     rate: 40
   - effectType: 1
     boosterSpr: {fileID: -1312994402987499043, guid: adcb5fae9aa0a804c860037bd1c6ff1c, type: 3}
-    value: 8
+    value: 2
     rate: 20
   - effectType: 2
     boosterSpr: {fileID: -4060402318970035109, guid: adcb5fae9aa0a804c860037bd1c6ff1c, type: 3}
