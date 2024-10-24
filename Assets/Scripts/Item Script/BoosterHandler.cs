@@ -9,11 +9,24 @@ public class BoosterHandler : MonoBehaviour
     [SerializeField] private int lifeTime = 10;
     [SerializeField] private Booster booster;
     [SerializeField] private SpriteRenderer boosterSpr;
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private BoxCollider2D boxCollider;
     private CancellationTokenSource cancellationTokenSource = new();
+
+    private void OnValidate()
+    {
+        boosterSpr = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
+    }
 
 
     public async void Init()
     {
+        boosterSpr.color = Color.white;
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.gravityScale = 1;
+        boxCollider.enabled = true;
         try
         {
             cancellationTokenSource = new();
@@ -30,7 +43,10 @@ public class BoosterHandler : MonoBehaviour
     {
         if (gameObject != null)
         {
-            boosterSpr.DOFade(0, 0.1f).SetLoops(10, LoopType.Yoyo).OnComplete(() =>
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.gravityScale = 0;
+            boxCollider.enabled = false;
+            boosterSpr.DOFade(0, 0.1f).SetLoops(5, LoopType.Yoyo).OnComplete(() =>
             {
                 ObjectPool.Instance?.Recall(gameObject);
                 CallCancellationTokenSource();
@@ -66,5 +82,10 @@ public class BoosterHandler : MonoBehaviour
     void OnDestroy()
     {
         CallCancellationTokenSource();
+    }
+
+    private void OnDisable()
+    {
+        boosterSpr?.DOKill();
     }
 }
