@@ -81,7 +81,7 @@ public class BulletLogic : MonoBehaviour
         if (LockedTarget != null)
         {
             //BulletRB.linearVelocity = direction * StartSpeed;
-            BulletRB.linearVelocity = Vector2.Lerp(BulletRB.linearVelocity, BulletRB.linearVelocity / 1.5f, Time.deltaTime * 2.5f);
+            BulletRB.linearVelocity = Vector2.Lerp(BulletRB.linearVelocity, BulletRB.linearVelocity / 1.5f, Time.deltaTime * 2f);
         }
     }
 

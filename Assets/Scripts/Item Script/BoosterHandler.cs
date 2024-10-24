@@ -48,12 +48,15 @@ public class BoosterHandler : MonoBehaviour
             boxCollider.enabled = false;
             boosterSpr.DOFade(0, 0.1f).SetLoops(5, LoopType.Yoyo).OnComplete(() =>
             {
-                ObjectPool.Instance?.Recall(gameObject);
-                CallCancellationTokenSource();
+                RecallBooster();
             });
         }
     }
-
+    private void RecallBooster()
+    {
+        ObjectPool.Instance?.Recall(gameObject);
+        CallCancellationTokenSource();
+    }
     public void SetBooster(Booster booster)
     {
         this.booster = booster;
@@ -68,9 +71,9 @@ public class BoosterHandler : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Player"))
         {
-            PlayerSystem playerSystem = collision.gameObject.GetComponent<PlayerSystem>();
+            PlayerController playerSystem = collision.gameObject.GetComponent<PlayerController>();
             BoosterManager.Instance.ActivateBooster(booster, playerSystem);
-            DeactiveBooster();
+            RecallBooster();
         }
     }
 

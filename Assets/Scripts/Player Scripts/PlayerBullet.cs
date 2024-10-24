@@ -18,11 +18,11 @@ public class PlayerBullet : MonoBehaviour
         this.gameObject.transform.Translate(this.gameObject.transform.InverseTransformDirection(transform.right * MoveSpeed * Time.deltaTime));
         if (Time.time - spawnTime > 2.5f)
         {
-            RecallBullet();
+            Deactive();
         }
     }
 
-    private void RecallBullet()
+    private void Deactive()
     {
         sr.DOFade(0, 0.5f).OnComplete(() =>
         {
