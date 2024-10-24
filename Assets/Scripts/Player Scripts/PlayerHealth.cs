@@ -1,128 +1,129 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] private int MaxHealth = 10;
-    [SerializeField] private Image HealthUI;
-    [SerializeField] private GameObject GodModeSymbol;
-    [SerializeField] private float GodModeTime = 5;
-    [SerializeField] private float GodModeCurrentTime = 0;
-    [SerializeField] private ButtonUIManager buttonUIManager;
-    private SceneManager sceneManager;
-    private Slider HealthSlider;
-    public int CurrentHealth;
+    [Header("Health Settings")]
+    [SerializeField] private Slider healthSlider;
 
-    [Header("TakeDamgeEffect")]
-        
-        [SerializeField] private float InvincibilityTime;
-        private float CurrentInvincibleTime;
-        private SpriteRenderer InvincibilityEffect;
+    [Header("UI & Effects")]
+    [SerializeField] private Image healthUI;
+    [SerializeField] private GameObject godModeSymbol;
 
-    [Header("Dead Effect")]
+    private int currentHealth;
+    private float godModeTimer;
+    public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
 
-        private SpriteRenderer Appearance;
-        private Collider2D PlayerCollider;
-        private bool Exploded = false;
-        [SerializeField] private GameObject Explode;
-        
+    [Header("Damage & Invincibility")]
+    [Tooltip("Time duration for invincibility after taking damage")]
+    [SerializeField] private float invincibilityDuration = 1f;
+    private float invincibilityTimer;
+    private SpriteRenderer spriteRenderer;
+
+    [Header("Death Effect")]
+    [SerializeField] private GameObject explodeEffectPrefab;
+    private bool hasExploded;
+    private Collider2D playerCollider;
+
+
     void Start()
     {
-        CurrentHealth = MaxHealth;
-        HealthSlider = this.gameObject.GetComponent<Slider>();
-        InvincibilityEffect = this.gameObject.GetComponent<SpriteRenderer>();
-        Appearance = this.gameObject.GetComponent<SpriteRenderer>();
-        PlayerCollider = this.gameObject.GetComponent<Collider2D>();
+        // Initialize health and components
+        currentHealth = ConstValue.maxHealth;
+        //healthSlider.maxValue = maxHealth;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        playerCollider = GetComponent<Collider2D>();
+        healthSlider = GetComponent<Slider>();
+
+        godModeTimer = 0f;
+        invincibilityTimer = 0f;
+        hasExploded = false;
     }
 
     void Update()
     {
-        HealthSlider.value = CurrentHealth;
-        
-        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+        healthSlider.value = Mathf.Lerp(healthSlider.value, currentHealth, 10f * Time.deltaTime);
+        currentHealth = Mathf.Clamp(currentHealth, 0, ConstValue.maxHealth);
 
-        GodModeSymbol.transform.rotation = Quaternion.Euler(0, 0, 0);
+        HandleGodMode();
+        HandleInvincibilityEffect();
+        HandleFallToDeath();
 
-
-        // Godmode
-
-        GodModeCurrentTime -= Time.deltaTime;
-
-        if (GodModeCurrentTime <= 0)
+        if (currentHealth <= 0 && !hasExploded)
         {
-            GodModeSymbol.SetActive(false);
+            HandleDeath();
+        }
+    }
+
+    private void HandleGodMode()
+    {
+        godModeTimer -= Time.deltaTime;
+
+        if (godModeTimer <= 0)
+        {
+            godModeSymbol.SetActive(false);
         }
         else
         {
-            GodModeSymbol.SetActive(true);
-        }
-
-
-        // Invincibility
-
-        CurrentInvincibleTime -= Time.deltaTime;
-
-        if (CurrentInvincibleTime > 0)
-        {
-            InvincibilityEffect.color = new Color(1, 1, 1, 0.5f);
-        }
-        else 
-        {
-            InvincibilityEffect.color = new Color(1, 1, 1, 1f);
-        }
-
-        // Fall to Death
-        
-        if (this.gameObject.transform.position.y <= -12.5f)
-        {
-            CurrentHealth = 0;
-        }
-
-        // Death 
-        if (CurrentHealth == 0)
-        {
-            if (Exploded == false)
-            {
-                GameObject Dead = Instantiate(Explode, this.gameObject.transform.position, Quaternion.identity);
-                Exploded = true;
-            }
-            Appearance.enabled = false;
-            PlayerCollider.enabled = false;
-            //StartCoroutine(ShowWinnerDelay(2f));
-            Invoke("ShowWinnerDelay", 2f);
-            Destroy(this.gameObject, 2f);
+            godModeSymbol.SetActive(true);
         }
     }
-    public void HealMode()
+
+    private void HandleInvincibilityEffect()
     {
-        CurrentHealth += 3;
-    }
-    public void ActiveGodMode() 
-    {
-        GodModeCurrentTime = GodModeTime;
+        invincibilityTimer -= Time.deltaTime;
+
+        spriteRenderer.color = invincibilityTimer > 0
+            ? new Color(1, 1, 1, 0.5f)
+            : new Color(1, 1, 1, 1f);
     }
 
-    public void TakeDamage(int Damage) 
+    private void HandleFallToDeath()
     {
-        if (CurrentInvincibleTime <= 0 && GodModeCurrentTime <= 0)
+        if (transform.position.y <= -12.5f)
         {
-            CurrentHealth -= Damage;
-            CurrentInvincibleTime = InvincibilityTime;
+            currentHealth = 0;
         }
     }
-   /*
-   IEnumerator ShowWinnerDelay(float delay)
+
+    private void HandleDeath()
     {
-        yield return new WaitForSeconds(delay);
-        Debug.Log("check winner affter delay");
-        mainUIManager.ShowWinner();
-    }
-    */
-    private void ShowWinnerDelay()
-    {
-        buttonUIManager.ShowWinner();
+        hasExploded = true;
+
+        // Play explosion effect
+        Instantiate(explodeEffectPrefab, transform.position, Quaternion.identity);
+
+        // Disable player's appearance and collider
+        spriteRenderer.enabled = false;
+        playerCollider.enabled = false;
+
+        // Show winner and destroy player object after a delay
+        Invoke(nameof(ShowWinner), 2f);
+        Destroy(gameObject, 2f);
     }
 
+    public void IncreaseHp(int amount)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, ConstValue.maxHealth);
+    }
+
+    public void ActivateGodMode(int duration)
+    {
+        godModeTimer = duration;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        if (invincibilityTimer <= 0 && godModeTimer <= 0)
+        {
+            currentHealth -= damage;
+            invincibilityTimer = invincibilityDuration;
+        }
+    }
+
+    private void ShowWinner()
+    {
+        GameController.Instance.SetupGameResult();
+    }
 }
