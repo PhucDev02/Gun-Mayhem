@@ -219,11 +219,12 @@ GameObject:
   - component: {fileID: 1436339597190745454}
   - component: {fileID: 4962468331618072544}
   - component: {fileID: 2848628057934659330}
-  - component: {fileID: 8600185250722480279}
   - component: {fileID: 1320182584699804087}
   - component: {fileID: 5708042533916280744}
   - component: {fileID: 8570124552543253748}
   - component: {fileID: 8081283638348359570}
+  - component: {fileID: 7630723277271059959}
+  - component: {fileID: 6920781030773330224}
   m_Layer: 7
   m_Name: Player 2
   m_TagString: Player
@@ -297,8 +298,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1593843671
   m_SortingLayer: 2
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 8981912545649666043, guid: c4d97c3e56a972b41adbe865e030199a, type: 3}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 9033512161936005711, guid: c3b8c6140c169bc4e9fc505dbe8915f7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -385,163 +386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d0aaba7d4b03b145910a7b2b9854afb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputSetting:
-    jump: 273
-    left: 276
-    right: 275
-    attack: 256
-    dash: 271
-  bulletTag: 3
-  PlayerRB: {fileID: 4962468331618072544}
   MoveSpeed: 4
-  JumpForce: 15
-  GroundCheckPoint: {fileID: 6315819145363137751}
-  WhatIsGround:
-    serializedVersion: 2
-    m_Bits: 64
-  CheckRadius: 0.25
-  RankIcon: {fileID: 8780922736285282265}
-  AttackPoint: {fileID: 961156901135645363}
-  AttackCoolDown: 0.5
-  Bullet: {fileID: 577619396356555451, guid: bcc312035bf42724d93422f932d40ac7, type: 3}
-  AttackSound: {fileID: 0}
-  DashTime: 0.25
-  DashCoolDown: 1
-  DashEffect: {fileID: 2782343568510075173, guid: 301a9d60a1f1e904aaf1ae2130c27552, type: 3}
---- !u!114 &8600185250722480279
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3775668903009342077}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 40433eca323702147a289ad791594f39, type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2848628057934659330}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: NewInputSystem_PlayerMovement
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 5ec53c16-1a93-4f67-a4ae-d33afd0ea7ed
-    m_ActionName: 'Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]'
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2848628057934659330}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: NewInputSystem_PlayerJump
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: b7b32299-1063-412f-b054-f9fad8a09109
-    m_ActionName: 'Player/Jump[/Keyboard/space]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 4bcba778-7aa7-4ffe-9295-b9b43bf12eaa
-    m_ActionName: 'UI/Navigate[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 1f1664f4-2947-4f24-8e4a-7e0341cfcf11
-    m_ActionName: 'UI/Submit[/Keyboard/enter]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 8ab8afac-ede8-4cbd-af6f-efffc1601e88
-    m_ActionName: 'UI/Cancel[/Keyboard/escape]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 7a5e97ae-c616-4a65-8f2d-51ca96e0b05d
-    m_ActionName: 'UI/Point[/Mouse/position]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 8639a64c-0b98-40d9-aca1-4015252a56bb
-    m_ActionName: 'UI/Click[/Mouse/leftButton]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: ea43c376-4169-49fe-92c7-8f5bb76b1dae
-    m_ActionName: 'UI/ScrollWheel[/Mouse/scroll]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 0db6b519-78c6-48b9-ad2e-b7917d6e6e62
-    m_ActionName: 'UI/MiddleClick[/Mouse/middleButton]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 614ea067-2c05-4110-89bc-9c100ed8a5b6
-    m_ActionName: 'UI/RightClick[/Mouse/rightButton]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: fd302508-e22c-429e-9eef-aa7622b0c2c0
-    m_ActionName: UI/TrackedDevicePosition
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: adfecccb-573a-4af8-aa52-1c7003090f57
-    m_ActionName: UI/TrackedDeviceOrientation
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2848628057934659330}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: NewInputSystem_PlayerAttack
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: c46391a5-bc1a-4221-a962-d7bb72bd08f2
-    m_ActionName: 'Player/Attack[/Keyboard/numpadEnter]'
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2848628057934659330}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: DashSystem
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: ad5e963e-67b6-47ba-96db-68e95492c981
-    m_ActionName: 'Player/Dash[/Keyboard/numpadPeriod]'
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!95 &1320182584699804087
 Animator:
   serializedVersion: 7
@@ -627,13 +472,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e641242ae1e80ff4486a93f1bd9a8565, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 10
-  healthSlider: {fileID: 0}
+  healthSlider: {fileID: 5708042533916280744}
   healthUI: {fileID: 0}
-  godModeSymbol: {fileID: 0}
-  godModeDuration: 5
+  godModeSymbol: {fileID: 1899599971107665446}
   invincibilityDuration: 1
-  explodeEffectPrefab: {fileID: 0}
+  explodeEffectPrefab: {fileID: 8933048366317599467, guid: f31ccce7eb203194fb06cd9b36a75fdc, type: 3}
 --- !u!114 &8081283638348359570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -646,8 +489,133 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb8225c5dca696e4aba92f98051a3b7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHealth: {fileID: 8570124552543253748}
-  playerController: {fileID: 2848628057934659330}
+  health: {fileID: 8570124552543253748}
+  reference: {fileID: 6920781030773330224}
+--- !u!82 &7630723277271059959
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3775668903009342077}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &6920781030773330224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3775668903009342077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c3bdba5d6b17cf4eb16cf5924ea0b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputSetting:
+    jump: 273
+    left: 276
+    right: 275
+    attack: 0
+    dash: 0
+  bulletTag: 3
+  Rb: {fileID: 4962468331618072544}
+  GroundCheckPoint: {fileID: 6315819145363137751}
+  Animator: {fileID: 1320182584699804087}
+  AttackPoint: {fileID: 961156901135645363}
+  Bullet: {fileID: 0}
+  AttackSound: {fileID: 8300000, guid: 6e73b63a6eda3d4468d045985bf9d969, type: 3}
+  Audio: {fileID: 7630723277271059959}
+  DashEffect: {fileID: 6361257137906712321, guid: 69e0262c963b31f4aaf24e6d2d97d54d, type: 3}
+  Sr: {fileID: 1983416580465423464}
 --- !u!1 &6031089285016570601
 GameObject:
   m_ObjectHideFlags: 0

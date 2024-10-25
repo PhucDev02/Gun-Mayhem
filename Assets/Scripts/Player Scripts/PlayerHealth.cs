@@ -100,7 +100,7 @@ public class PlayerHealth : MonoBehaviour
 
         // Show winner and destroy player object after a delay
         Invoke(nameof(ShowWinner), 2f);
-        Destroy(gameObject, 2f);
+        //Destroy(gameObject, 2f);
     }
 
     public void IncreaseHp(int amount)
@@ -124,6 +124,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void ShowWinner()
     {
+        Debug.Log(GameController.Instance == null);
         GameController.Instance.SetupGameResult();
     }
 }

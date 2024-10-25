@@ -8,7 +8,7 @@ public class ResultUI : MonoBehaviour
     
     void Start()
     {
-        winImg.sprite = (GameController.Winner == Winner.BluePlayer)
+        winImg.sprite = (GameController.Winner == EPlayer.BluePlayer)
             ? blueWinSpr : redWinSpr;
     }
 }

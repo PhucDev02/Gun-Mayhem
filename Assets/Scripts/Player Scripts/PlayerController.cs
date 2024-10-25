@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
     private PlayerHealth health;
     [SerializeField]
     private IPlayerAction action;
+    public PlayerReference reference;
     private void Start()
     {
         action=GetComponent<IPlayerAction>();
