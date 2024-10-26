@@ -30,7 +30,6 @@ public class BoosterSpawner : MonoBehaviour
 
                 if (selectedBooster != null)
                 {
-                    //GameObject boosterInstance = Instantiate(boosterPrefab, GetRandomSpawnPosition(), Quaternion.identity);
                     GameObject boosterInstance = ObjectPool.Instance.Spawn(PoolObjectTag.Booster);
                     boosterInstance.transform.position = GetRandomSpawnPosition();
 

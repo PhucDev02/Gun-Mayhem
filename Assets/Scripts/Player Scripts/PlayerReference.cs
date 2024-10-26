@@ -11,7 +11,10 @@ public class PlayerReference : MonoBehaviour
 
     [Header("Jumping System")]
     [SerializeField] private GameObject GroundCheckPoint;
-
+    
+    [Header("Jumping System")]
+    [SerializeField] public OneWayPlatformHandler OneWayPlatformHandler;
+    
     [Header("Animation System")]
     public Animator Animator;
 
@@ -32,7 +35,7 @@ public class PlayerReference : MonoBehaviour
     }
     public bool IsOnGround()
     {
-        return Physics2D.OverlapCircle(GroundCheckPoint.transform.position, ConstValue.groundRadiusCheck, LayerMask.GetMask(ConstValue.GroundLayerMask));
+        return Physics2D.OverlapCircle(GroundCheckPoint.transform.position, ConstValue.groundRadiusCheck, LayerMask.GetMask(ConstValue.Tags.MOVEABLE_SURFACES));
     }
     public void PresentRangeAttack()
     {

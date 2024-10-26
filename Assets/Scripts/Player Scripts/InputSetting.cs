@@ -4,6 +4,7 @@ using UnityEngine;
 public class InputSetting
 {
     public KeyCode jump;
+    public KeyCode drop;
     public KeyCode left;
     public KeyCode right;
     //KeyCode down;

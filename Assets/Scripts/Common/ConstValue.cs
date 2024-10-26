@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.Utilities;
 
 public class ConstValue
 {
@@ -12,5 +13,11 @@ public class ConstValue
     public const float dashCoolDownTime = 1f;
     public const float attackCooldown=.5f;
 
-    public static string GroundLayerMask = "Ground";
+
+    public class Tags
+    {
+        public static string[] MOVEABLE_SURFACES = { GROUND, ONE_WAY_PLATFORM };
+        public const string GROUND = "Ground";
+        public const string ONE_WAY_PLATFORM = "OneWayPlatform";
+    }
 }
