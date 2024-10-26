@@ -1,4 +1,5 @@
 using System;
+using Unity.Collections;
 using UnityEngine;
 
 public class PlayerReference : MonoBehaviour
@@ -25,14 +26,14 @@ public class PlayerReference : MonoBehaviour
     [SerializeField] private SpriteRenderer Sr;
     void OnValidate()
     {
-        Rb=GetComponent<Rigidbody2D>();
+        Rb = GetComponent<Rigidbody2D>();
         Animator = this.gameObject.GetComponent<Animator>();
         Sr = this.gameObject.GetComponent<SpriteRenderer>();
         Audio = this.gameObject.GetComponent<AudioSource>();
     }
     public bool IsOnGround()
     {
-        return Physics2D.OverlapCircle(GroundCheckPoint.transform.position, ConstValue.groundRadiusCheck, LayerMask.GetMask(ConstValue.GroundLayerMask));
+        return Physics2D.OverlapCircle(GroundCheckPoint.transform.position, GameConfig.data.groundRadiusCheck, GameConfig.data.GroundLayerMask);
     }
     public void PresentRangeAttack()
     {
@@ -40,6 +41,7 @@ public class PlayerReference : MonoBehaviour
         Audio.PlayOneShot(AttackSound);
         var bullet = ObjectPool.Instance.Spawn(bulletTag);
         bullet.transform.SetLocalPositionAndRotation(AttackPoint.transform.position, AttackPoint.transform.rotation);
+        //Recoil();
     }
     public void SetVelocity(float x = float.MaxValue, float y = float.MaxValue)
     {
@@ -60,5 +62,11 @@ public class PlayerReference : MonoBehaviour
         SpriteRenderer Shadow = Effect.GetComponent<SpriteRenderer>();
         Shadow.sprite = Sr.sprite;
         Shadow.color = new Color(1, 1, 1, 0.5f);
+    }
+    public void Recoil()
+    {
+        Vector3 recoilDirection = Vector2.left * (transform.rotation.y < 90 ? 1 : -1) * GameConfig.data.recoilFactor;
+        Debug.Log(recoilDirection.x);
+        Rb.linearVelocity = new Vector2(recoilDirection.x, Rb.linearVelocityY);
     }
 }

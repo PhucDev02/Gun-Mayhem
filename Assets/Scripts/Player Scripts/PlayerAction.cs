@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerAction : MonoBehaviour, IPlayerAction
 {
     private PlayerController controller;
-    
+
     [SerializeField] private float MoveSpeed;
     private float velocity_X;
 
@@ -51,11 +51,11 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
 
     private void UpdateMovement()
     {
-        velocity_X = 0;
+        velocity_X = Mathf.Lerp(velocity_X, 0, GameConfig.data.velocityLerpFactor * Time.deltaTime);
         if (Input.GetKey(controller.reference.inputSetting.left))
         {
             Move(-1);
-            this.gameObject.transform.rotation = Quaternion.Euler(0, -180, 0);
+            this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
         }
         if (Input.GetKey(controller.reference.inputSetting.right))
         {
@@ -65,7 +65,7 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
 
         // Movement
 
-        controller.reference.SetVelocity(velocity_X * MoveSpeed,float.MaxValue);
+        controller.reference.SetVelocity(velocity_X * MoveSpeed, float.MaxValue);
         controller.reference.Animator.SetBool("IsGrounded", IsGrounded);
         controller.reference.Animator.SetFloat("Horizontal Input", Mathf.Abs(velocity_X));
         controller.reference.Animator.SetFloat("Y Velocity", controller.reference.Rb.linearVelocity.y);
@@ -96,29 +96,29 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
     public void IncreasePlayerSpeed(float multiplier)
     {
         CancelInvoke(nameof(ReturnDefaultSpeed));
-        this.MoveSpeed = multiplier*ConstValue.moveSpeed;
+        this.MoveSpeed = multiplier * GameConfig.data.moveSpeed;
         Invoke(nameof(ReturnDefaultSpeed), 10);
     }
 
     private void ReturnDefaultSpeed()
     {
-        this.MoveSpeed = ConstValue.moveSpeed;
+        this.MoveSpeed = GameConfig.data.moveSpeed;
     }
     public void Move(float dir)
     {
-        velocity_X = dir;
+        velocity_X+= dir;
     }
 
     public void Jump()
     {
         if (IsGrounded == true && CurrentDashTime <= 0)
         {
-            controller.reference.SetVelocity(float.MaxValue, ConstValue.jumpForce);
+            controller.reference.SetVelocity(float.MaxValue, GameConfig.data.jumpForce);
         }
 
         if (IsGrounded == false && Abled2DoubleJump == true && CurrentDashTime <= 0)
         {
-            controller.reference.SetVelocity(float.MaxValue, ConstValue.jumpForce);
+            controller.reference.SetVelocity(float.MaxValue, GameConfig.data.jumpForce);
             Abled2DoubleJump = false;
         }
     }
@@ -126,22 +126,29 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
     public void RangedAttack()
     {
         controller.reference.PresentRangeAttack();
-        CurrentAttackCoolDown = ConstValue.attackCooldown;
+        CurrentAttackCoolDown = GameConfig.data.attackCooldown;
+        // recoil
+        velocity_X += GameConfig.data.recoilFactor * (transform.eulerAngles.y > 90 ? 1 : -1);
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float forceKnockback, Vector2 position)
     {
+        Vector2 norm= (Vector2)transform.position- position;
+        norm.Normalize();
+        velocity_X += forceKnockback * (norm.x > 0 ? 1 : -1);
+        controller.reference.SetVelocity(float.MaxValue, controller.reference.Rb.linearVelocityY + norm.y * forceKnockback);
+
     }
 
     public void Dash()
     {
-        CurrentDashTime = ConstValue.dashTime;
-        CurrentDashCoolDown = ConstValue.dashCoolDownTime;
+        CurrentDashTime = GameConfig.data.dashTime;
+        CurrentDashCoolDown = GameConfig.data.dashCoolDownTime;
     }
 
     public void MeleeAttack()
     {
-        throw new System.NotImplementedException();
+
     }
 }
 //both player and AI have the same action,animation and movement -> should use abstract

@@ -30,7 +30,7 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         // Initialize health and components
-        currentHealth = ConstValue.maxHealth;
+        currentHealth = GameConfig.data.maxHealth;
         //healthSlider.maxValue = maxHealth;
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerCollider = GetComponent<Collider2D>();
@@ -44,7 +44,7 @@ public class PlayerHealth : MonoBehaviour
     void Update()
     {
         healthSlider.value = Mathf.Lerp(healthSlider.value, currentHealth, 10f * Time.deltaTime);
-        currentHealth = Mathf.Clamp(currentHealth, 0, ConstValue.maxHealth);
+        currentHealth = Mathf.Clamp(currentHealth, 0, GameConfig.data.maxHealth);
 
         HandleGodMode();
         HandleInvincibilityEffect();
@@ -105,7 +105,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void IncreaseHp(int amount)
     {
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, ConstValue.maxHealth);
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, GameConfig.data.maxHealth);
     }
 
     public void ActivateGodMode(int duration)
