@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour
 {
     [Header("Health Settings")]
-    [SerializeField] private int maxHealth = 10;
     [SerializeField] private Slider healthSlider;
 
     [Header("UI & Effects")]
@@ -31,7 +30,7 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         // Initialize health and components
-        currentHealth = maxHealth;
+        currentHealth = ConstValue.maxHealth;
         //healthSlider.maxValue = maxHealth;
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerCollider = GetComponent<Collider2D>();
@@ -44,8 +43,8 @@ public class PlayerHealth : MonoBehaviour
 
     void Update()
     {
-        healthSlider.value = Mathf.Lerp(healthSlider.value,currentHealth,10f*Time.deltaTime);
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        healthSlider.value = Mathf.Lerp(healthSlider.value, currentHealth, 10f * Time.deltaTime);
+        currentHealth = Mathf.Clamp(currentHealth, 0, ConstValue.maxHealth);
 
         HandleGodMode();
         HandleInvincibilityEffect();
@@ -76,8 +75,8 @@ public class PlayerHealth : MonoBehaviour
         invincibilityTimer -= Time.deltaTime;
 
         spriteRenderer.color = invincibilityTimer > 0
-            ? new Color(1, 1, 1, 0.5f)  
-            : new Color(1, 1, 1, 1f);   
+            ? new Color(1, 1, 1, 0.5f)
+            : new Color(1, 1, 1, 1f);
     }
 
     private void HandleFallToDeath()
@@ -101,12 +100,12 @@ public class PlayerHealth : MonoBehaviour
 
         // Show winner and destroy player object after a delay
         Invoke(nameof(ShowWinner), 2f);
-        Destroy(gameObject, 2f);
+        //Destroy(gameObject, 2f);
     }
 
     public void IncreaseHp(int amount)
     {
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, ConstValue.maxHealth);
     }
 
     public void ActivateGodMode(int duration)
@@ -125,6 +124,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void ShowWinner()
     {
+        Debug.Log(GameController.Instance == null);
         GameController.Instance.SetupGameResult();
     }
 }
