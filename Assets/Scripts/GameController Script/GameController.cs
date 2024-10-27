@@ -29,7 +29,8 @@ public class GameController : Singleton<GameController>
     }
     private void UpdateMeanPlayersDistance()
     {
-        CameraController.meanDistancePlayers = Vector3.Distance(players[0].transform.position, players[1].transform.position)/2;
+        CameraController.meanDistancePlayers = Vector3.Distance(players[0].transform.position, players[1].transform.position);
+        Debug.Log(CameraController.meanDistancePlayers);
     }
     public static EPlayer Winner { get => winner; set => winner = value; }
 
