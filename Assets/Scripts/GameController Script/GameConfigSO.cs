@@ -15,4 +15,5 @@ public class GameConfigSO : ScriptableObject
     public float recoilFactor = 1.5f;
     public float bulletMoveSpeed = 10f;
     public float bulletKnockbackForce = 5;
+    public float knockbackTime=0.2f;
 }

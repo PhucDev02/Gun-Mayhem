@@ -25,3 +25,5 @@ MonoBehaviour:
     m_Bits: 64
   recoilFactor: 1.5
   bulletMoveSpeed: 15
+  bulletKnockbackForce: 5
+  knockbackTime: 0.2

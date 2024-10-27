@@ -13,6 +13,7 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
     private float CurrentAttackCoolDown = 0;
     private float CurrentDashTime = 0;
     private float CurrentDashCoolDown = 0;
+    private float CurrentKnockbackTime = 0;
     private void Start()
     {
         controller = GetComponent<PlayerController>();
@@ -31,6 +32,8 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
         {
             Abled2DoubleJump = true;
         }
+        CurrentKnockbackTime -= Time.deltaTime;
+        CurrentKnockbackTime = Mathf.Max(CurrentKnockbackTime, 0);
 
         CurrentDashTime -= Time.deltaTime;
         CurrentDashTime = Mathf.Max(CurrentDashTime, 0);
@@ -106,7 +109,10 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
     }
     public void Move(float dir)
     {
-        velocity_X+= dir;
+        if (CurrentKnockbackTime > 0) return;
+        if (Mathf.Abs(velocity_X + dir) > Mathf.Abs(dir) * 2) return;
+        else
+            velocity_X += dir;
     }
 
     public void Jump()
@@ -133,11 +139,14 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
 
     public void TakeDamage(float forceKnockback, Vector2 position)
     {
-        Vector2 norm= (Vector2)transform.position- position;
+
+        CurrentKnockbackTime = GameConfig.data.knockbackTime;
+
+        Vector2 norm = (Vector2)transform.position - position;
         norm.Normalize();
+        norm.y = 0;
         velocity_X += forceKnockback * (norm.x > 0 ? 1 : -1);
         controller.reference.SetVelocity(float.MaxValue, controller.reference.Rb.linearVelocityY + norm.y * forceKnockback);
-
     }
 
     public void Dash()
