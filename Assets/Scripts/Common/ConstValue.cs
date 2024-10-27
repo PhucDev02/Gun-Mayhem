@@ -5,6 +5,7 @@ using UnityEngine.InputSystem.Utilities;
 
 public class ConstValue
 {
+    
     public const float groundRadiusCheck= 0.25f;
     public const int maxLives = 3;
     public const int moveSpeed = 4;

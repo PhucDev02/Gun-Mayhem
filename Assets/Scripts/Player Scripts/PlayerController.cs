@@ -1,3 +1,5 @@
+
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -24,5 +26,11 @@ public class PlayerController : MonoBehaviour
     public void ChangeSpeed(int speed)
     {
         action.IncreasePlayerSpeed(speed);
+    }
+
+    internal void TakeDamage(float force, Vector3 position)
+    {
+        //health.TakeDamage(force);
+        action.TakeDamage(force, position);
     }
 }

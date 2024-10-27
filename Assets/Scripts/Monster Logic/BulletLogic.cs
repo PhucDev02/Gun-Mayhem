@@ -66,7 +66,6 @@ public class BulletLogic : MonoBehaviour
             LockedTarget = player;
             direction = (player.transform.position - transform.position).normalized;
             float factor = (player.transform.position - transform.position).magnitude/ thresholdMagnitude;
-            Debug.Log(factor);
             BulletRB.linearVelocity = direction * StartSpeed*factor;
         }
         else

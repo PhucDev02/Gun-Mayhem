@@ -6,7 +6,7 @@ public interface IPlayerAction
     public void Jump();
     public void RangedAttack();
     public void MeleeAttack();
-    public void TakeDamage(int damage);
+    public void TakeDamage(float forceKnockback,Vector2 position);
     public void Dash();
     public void IncreasePlayerSpeed(float speed);
 }

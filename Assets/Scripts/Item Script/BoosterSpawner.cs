@@ -26,7 +26,7 @@ public class BoosterSpawner : MonoBehaviour
             {
                 await Task.Delay((int)(spawnInterval * 1000), cancellationToken);
                 Booster selectedBooster = BoosterManager.Instance.GetRandomBoosterByRate();
-                Debug.Log("Spawn booster: " + selectedBooster.effectType.ToString());
+                //Debug.Log("Spawn booster: " + selectedBooster.effectType.ToString());
 
                 if (selectedBooster != null)
                 {

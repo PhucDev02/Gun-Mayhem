@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class PlayerBullet : MonoBehaviour
 {
-    [SerializeField] private float MoveSpeed = 10f;
     [SerializeField] private SpriteRenderer sr;
     float spawnTime;
     private void OnEnable()
@@ -15,7 +14,7 @@ public class PlayerBullet : MonoBehaviour
     }
     void Update()
     {
-        this.gameObject.transform.Translate(this.gameObject.transform.InverseTransformDirection(transform.right * MoveSpeed * Time.deltaTime));
+        this.gameObject.transform.Translate(this.gameObject.transform.InverseTransformDirection(transform.right * GameConfig.data.bulletMoveSpeed * Time.deltaTime));
         if (Time.time - spawnTime > 2.5f)
         {
             Deactive();
@@ -34,10 +33,11 @@ public class PlayerBullet : MonoBehaviour
     {
         if (collision.tag == "Player" || collision.tag == "Ground" || collision.tag == "Player Bullet")
         {
+            PlayerController player = collision.GetComponent<PlayerController>();
             PlayerLives EnemyHealth = collision.GetComponent<PlayerLives>();
-
-            if (EnemyHealth != null)
+            if (player != null)
             {
+                player.TakeDamage(GameConfig.data.bulletKnockbackForce,transform.position);
                 ObjectPool.Instance.Recall(this.gameObject);
             }
 
