@@ -34,11 +34,10 @@ public class PlayerBullet : MonoBehaviour
     {
         if (collision.tag == "Player" || collision.tag == "Ground" || collision.tag == "Player Bullet")
         {
-            PlayerHealth EnemyHealth = collision.GetComponent<PlayerHealth>();
+            PlayerLives EnemyHealth = collision.GetComponent<PlayerLives>();
 
             if (EnemyHealth != null)
             {
-                EnemyHealth.TakeDamage(1);
                 ObjectPool.Instance.Recall(this.gameObject);
             }
 

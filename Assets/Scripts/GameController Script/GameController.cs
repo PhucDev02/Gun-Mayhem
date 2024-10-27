@@ -13,7 +13,7 @@ public enum EPlayer
 public class GameController : Singleton<GameController>
 {
     private static EPlayer winner;
-    [SerializeField] private PlayerHealth[] players;
+    [SerializeField] private PlayerLives[] players;
 
 
     public static EPlayer Winner { get => winner; set => winner = value; }
@@ -24,7 +24,7 @@ public class GameController : Singleton<GameController>
         if (isSetResult) return;
         isSetResult = true;
 
-        winner = (players[0].CurrentHealth > players[1].CurrentHealth) ?
+        winner = (players[0].CurrentLives > players[1].CurrentLives) ?
             EPlayer.BluePlayer : EPlayer.RedPlayer;
         ShowResult();
     }

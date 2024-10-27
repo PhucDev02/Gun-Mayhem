@@ -2,18 +2,17 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerLives : MonoBehaviour
 {
     [Header("Health Settings")]
-    [SerializeField] private Slider healthSlider;
+    [SerializeField] private Slider livesSlider;
 
     [Header("UI & Effects")]
-    [SerializeField] private Image healthUI;
     [SerializeField] private GameObject godModeSymbol;
 
-    private int currentHealth;
+    private int currentLives;
     private float godModeTimer;
-    public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
+    public int CurrentLives { get => currentLives; set => currentLives = value; }
 
     [Header("Damage & Invincibility")]
     [Tooltip("Time duration for invincibility after taking damage")]
@@ -23,37 +22,27 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Death Effect")]
     [SerializeField] private GameObject explodeEffectPrefab;
-    private bool hasExploded;
-    private Collider2D playerCollider;
 
 
     void Start()
     {
-        // Initialize health and components
-        currentHealth = ConstValue.maxHealth;
-        //healthSlider.maxValue = maxHealth;
+        currentLives = ConstValue.maxLives;
         spriteRenderer = GetComponent<SpriteRenderer>();
-        playerCollider = GetComponent<Collider2D>();
-        healthSlider = GetComponent<Slider>();
+        livesSlider = GetComponent<Slider>();
+        livesSlider.maxValue = ConstValue.maxLives;
 
         godModeTimer = 0f;
         invincibilityTimer = 0f;
-        hasExploded = false;
     }
 
     void Update()
     {
-        healthSlider.value = Mathf.Lerp(healthSlider.value, currentHealth, 10f * Time.deltaTime);
-        currentHealth = Mathf.Clamp(currentHealth, 0, ConstValue.maxHealth);
+        livesSlider.value = Mathf.Lerp(livesSlider.value, currentLives, 10f * Time.deltaTime);
+        currentLives = Mathf.Clamp(currentLives, 0, ConstValue.maxLives);
 
         HandleGodMode();
         HandleInvincibilityEffect();
         HandleFallToDeath();
-
-        if (currentHealth <= 0 && !hasExploded)
-        {
-            HandleDeath();
-        }
     }
 
     private void HandleGodMode()
@@ -83,29 +72,25 @@ public class PlayerHealth : MonoBehaviour
     {
         if (transform.position.y <= -12.5f)
         {
-            currentHealth = 0;
+            currentLives--;
+            if(currentLives <= 0)
+            {
+                HandleDeath();
+                return;
+            }
+            transform.position = new Vector3(Random.Range(ConstValue.environmentLimitX.x, ConstValue.environmentLimitX.y), 12f);
         }
     }
 
     private void HandleDeath()
     {
-        hasExploded = true;
-
-        // Play explosion effect
-        Instantiate(explodeEffectPrefab, transform.position, Quaternion.identity);
-
-        // Disable player's appearance and collider
-        spriteRenderer.enabled = false;
-        playerCollider.enabled = false;
-
-        // Show winner and destroy player object after a delay
         Invoke(nameof(ShowWinner), 2f);
-        //Destroy(gameObject, 2f);
     }
 
     public void IncreaseHp(int amount)
     {
-        currentHealth = Mathf.Clamp(currentHealth + amount, 0, ConstValue.maxHealth);
+        int _lives = (currentLives == ConstValue.maxLives) ? ConstValue.maxLives : currentLives + amount;
+        currentLives = Mathf.Clamp(_lives, 0, ConstValue.maxLives);
     }
 
     public void ActivateGodMode(int duration)
@@ -117,7 +102,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (invincibilityTimer <= 0 && godModeTimer <= 0)
         {
-            currentHealth -= damage;
+            currentLives -= damage;
             invincibilityTimer = invincibilityDuration;
         }
     }

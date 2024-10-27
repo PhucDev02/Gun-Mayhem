@@ -6,12 +6,13 @@ using UnityEngine.InputSystem.Utilities;
 public class ConstValue
 {
     public const float groundRadiusCheck= 0.25f;
-    public const int maxHealth = 10;
+    public const int maxLives = 3;
     public const int moveSpeed = 4;
     public const float jumpForce = 15;
     public const float dashTime = 0.25f;
     public const float dashCoolDownTime = 1f;
     public const float attackCooldown=.5f;
+    public static Vector2 environmentLimitX = new Vector2(-10, 10);
 
 
     public class Tags
