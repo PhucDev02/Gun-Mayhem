@@ -30,7 +30,6 @@ public class BoosterSpawner : MonoBehaviour
 
                 if (selectedBooster != null)
                 {
-                    //GameObject boosterInstance = Instantiate(boosterPrefab, GetRandomSpawnPosition(), Quaternion.identity);
                     GameObject boosterInstance = ObjectPool.Instance.Spawn(PoolObjectTag.Booster);
                     boosterInstance.transform.position = GetRandomSpawnPosition();
 
@@ -48,7 +47,7 @@ public class BoosterSpawner : MonoBehaviour
 
     private Vector3 GetRandomSpawnPosition()
     {
-        float x = Random.Range(-14f, 14f);
+        float x = Random.Range(ConstValue.environmentLimitX.x, ConstValue.environmentLimitX.y);
         float y = 12f;
         return new Vector3(x, y);
     }
