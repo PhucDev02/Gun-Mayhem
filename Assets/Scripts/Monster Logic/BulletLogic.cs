@@ -88,11 +88,7 @@ public class BulletLogic : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            PlayerHealth TargetHealth = collision.GetComponent<PlayerHealth>();
-            if (TargetHealth != null)
-            {
-                TargetHealth.TakeDamage(1);
-            }
+            PlayerLives TargetHealth = collision.GetComponent<PlayerLives>();
             ReleaseBullet();
         }
     }

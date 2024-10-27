@@ -12,7 +12,10 @@ public class PlayerReference : MonoBehaviour
 
     [Header("Jumping System")]
     [SerializeField] private GameObject GroundCheckPoint;
-
+    
+    [Header("Jumping System")]
+    [SerializeField] public OneWayPlatformHandler OneWayPlatformHandler;
+    
     [Header("Animation System")]
     public Animator Animator;
 

@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
     public static float meanDistancePlayers;
     private void Update()
     {
-        cam.Lens.OrthographicSize = Mathf.Lerp(cam.Lens.OrthographicSize, GetComfortableSize(), 5f * Time.deltaTime);
+        cam.Lens.OrthographicSize = Mathf.Lerp(cam.Lens.OrthographicSize, GetComfortableSize(), 2.5f * Time.deltaTime);
     }
 
     private float GetComfortableSize()

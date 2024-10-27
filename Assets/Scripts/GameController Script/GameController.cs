@@ -13,7 +13,7 @@ public enum EPlayer
 public class GameController : Singleton<GameController>
 {
     private static EPlayer winner;
-    [SerializeField] private PlayerHealth[] players;
+    [SerializeField] private PlayerLives[] players;
 
     Vector3 midPoint;
     private void Update()
@@ -29,7 +29,8 @@ public class GameController : Singleton<GameController>
     }
     private void UpdateMeanPlayersDistance()
     {
-        CameraController.meanDistancePlayers = Vector3.Distance(players[0].transform.position, players[1].transform.position)/2;
+        CameraController.meanDistancePlayers = Vector3.Distance(players[0].transform.position, players[1].transform.position);
+        Debug.Log(CameraController.meanDistancePlayers);
     }
     public static EPlayer Winner { get => winner; set => winner = value; }
 
@@ -39,7 +40,7 @@ public class GameController : Singleton<GameController>
         if (isSetResult) return;
         isSetResult = true;
 
-        winner = (players[0].CurrentHealth > players[1].CurrentHealth) ?
+        winner = (players[0].CurrentLives > players[1].CurrentLives) ?
             EPlayer.BluePlayer : EPlayer.RedPlayer;
         ShowResult();
     }

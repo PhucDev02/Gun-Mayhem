@@ -24,6 +24,7 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
         UpdateMovement();
         UpdateAttack();
         UpdateJump();
+        UpdateDrop();
         UpdateDash();
 
         IsGrounded = controller.reference.IsOnGround();
@@ -88,6 +89,12 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
         Jump();
     }
 
+    private void UpdateDrop()
+    {
+        if (!Input.GetKeyDown(controller.reference.inputSetting.drop)) return;
+        Drop();
+    }
+
     private void UpdateAttack()
     {
         if (Input.GetKey(controller.reference.inputSetting.attack) && CurrentAttackCoolDown <= 0)
@@ -127,6 +134,11 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
             controller.reference.SetVelocity(float.MaxValue, GameConfig.data.jumpForce);
             Abled2DoubleJump = false;
         }
+    }
+
+    public void Drop()
+    {
+        controller.reference.OneWayPlatformHandler.OnDropMyself();
     }
 
     public void RangedAttack()

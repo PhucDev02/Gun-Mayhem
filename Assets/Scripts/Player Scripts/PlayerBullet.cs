@@ -34,7 +34,7 @@ public class PlayerBullet : MonoBehaviour
         if (collision.tag == "Player" || collision.tag == "Ground" || collision.tag == "Player Bullet")
         {
             PlayerController player = collision.GetComponent<PlayerController>();
-
+            PlayerLives EnemyHealth = collision.GetComponent<PlayerLives>();
             if (player != null)
             {
                 player.TakeDamage(GameConfig.data.bulletKnockbackForce,transform.position);

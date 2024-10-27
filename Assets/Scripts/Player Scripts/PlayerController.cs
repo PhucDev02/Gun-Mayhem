@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private PlayerHealth health;
+    private PlayerLives health;
     [SerializeField]
     private IPlayerAction action;
     public PlayerReference reference;
