@@ -2,7 +2,7 @@ using UnityEngine;
 
 public enum BoosterEffectType
 {
-    IncreaseHP,
+    IncreaseLives,
     IncreaseSpeed,
     SwapWeapon,
     BecomeInvisible,

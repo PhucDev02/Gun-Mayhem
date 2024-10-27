@@ -151,7 +151,7 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
 
     public void TakeDamage(float forceKnockback, Vector2 position)
     {
-
+        if (controller.playerLives.IsInvincible) return;
         CurrentKnockbackTime = GameConfig.data.knockbackTime;
 
         Vector2 norm = (Vector2)transform.position - position;

@@ -39,8 +39,8 @@ public class BoosterManager : MonoBehaviour
     {
         switch (booster.effectType)
         {
-            case BoosterEffectType.IncreaseHP:
-                playerSystem.IncreaseHp(booster.value);
+            case BoosterEffectType.IncreaseLives:
+                playerSystem.IncreaseLives(booster.value);
                 Debug.Log("Increased HP by: " + booster.value);
                 break;
 

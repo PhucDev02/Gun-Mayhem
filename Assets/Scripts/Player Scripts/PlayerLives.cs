@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Cysharp.Threading.Tasks;
+using System.Collections;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,21 +10,29 @@ public class PlayerLives : MonoBehaviour
     [SerializeField] private Slider livesSlider;
 
     [Header("UI & Effects")]
-    [SerializeField] private GameObject godModeSymbol;
+    [SerializeField] private GameObject invincibleIndicator;
 
     private int currentLives;
-    private float godModeTimer;
+    private bool isInvincible;
     public int CurrentLives { get => currentLives; set => currentLives = value; }
+    public bool IsInvincible { get => isInvincible; set => isInvincible = value; }
 
     [Header("Damage & Invincibility")]
     [Tooltip("Time duration for invincibility after taking damage")]
     [SerializeField] private float invincibilityDuration = 1f;
-    private float invincibilityTimer;
     private SpriteRenderer spriteRenderer;
 
     [Header("Death Effect")]
     [SerializeField] private GameObject explodeEffectPrefab;
 
+    private CancellationTokenSource cancellationTokenSource = new();
+    private PlayerController playerController;
+
+    private void Awake()
+    {
+        playerController = GetComponent<PlayerController>();
+        playerController.Register(this);
+    }
 
     void Start()
     {
@@ -31,49 +41,21 @@ public class PlayerLives : MonoBehaviour
         livesSlider = GetComponent<Slider>();
         livesSlider.maxValue = ConstValue.maxLives;
 
-        godModeTimer = 0f;
-        invincibilityTimer = 0f;
+        HandleInvincibleForm(false);
+        UpdateLives();
     }
 
     void Update()
     {
-        livesSlider.value = Mathf.Lerp(livesSlider.value, currentLives, 10f * Time.deltaTime);
-        currentLives = Mathf.Clamp(currentLives, 0, ConstValue.maxLives);
-
-        HandleGodMode();
-        HandleInvincibilityEffect();
         HandleFallToDeath();
-    }
-
-    private void HandleGodMode()
-    {
-        godModeTimer -= Time.deltaTime;
-
-        if (godModeTimer <= 0)
-        {
-            godModeSymbol.SetActive(false);
-        }
-        else
-        {
-            godModeSymbol.SetActive(true);
-        }
-    }
-
-    private void HandleInvincibilityEffect()
-    {
-        invincibilityTimer -= Time.deltaTime;
-
-        spriteRenderer.color = invincibilityTimer > 0
-            ? new Color(1, 1, 1, 0.5f)
-            : new Color(1, 1, 1, 1f);
     }
 
     private void HandleFallToDeath()
     {
         if (transform.position.y <= -12.5f)
         {
-            currentLives--;
-            if(currentLives <= 0)
+            UpdateLives(-1);
+            if (currentLives <= 0)
             {
                 HandleDeath();
                 return;
@@ -82,34 +64,52 @@ public class PlayerLives : MonoBehaviour
         }
     }
 
+    private void UpdateLives(int amount = 0)
+    {
+        currentLives = (currentLives + amount <= 0) ? 0 :
+               (currentLives + amount >= ConstValue.maxLives) ? ConstValue.maxLives :
+               currentLives + amount;
+        MessageSystem.TriggerEvent(MessageKey.UI.UpdatePlayerLives, playerController.EPlayer, currentLives);
+    }
+
     private void HandleDeath()
     {
-        Invoke(nameof(ShowWinner), 2f);
+        ShowWinner();
+        gameObject.SetActive(false);
     }
 
     public void IncreaseHp(int amount)
     {
-        int _lives = (currentLives == ConstValue.maxLives) ? ConstValue.maxLives : currentLives + amount;
-        currentLives = Mathf.Clamp(_lives, 0, ConstValue.maxLives);
+        UpdateLives(amount);
     }
 
-    public void ActivateGodMode(int duration)
+    public async void ActivateGodMode(int duration)
     {
-        godModeTimer = duration;
+        CallCancellationTokenSource();
+        HandleInvincibleForm(true);
+        await UniTask.Delay(duration * 1000);
+        HandleInvincibleForm(false);
     }
 
-    public void TakeDamage(int damage)
+    private void HandleInvincibleForm(bool state)
     {
-        if (invincibilityTimer <= 0 && godModeTimer <= 0)
-        {
-            currentLives -= damage;
-            invincibilityTimer = invincibilityDuration;
-        }
+        isInvincible = state;
+        invincibleIndicator.SetActive(state);
+    }
+
+    private void CallCancellationTokenSource()
+    {
+        cancellationTokenSource.Cancel();
     }
 
     private void ShowWinner()
     {
         Debug.Log(GameController.Instance == null);
         GameController.Instance.SetupGameResult();
+    }
+
+    private void OnDestroy()
+    {
+        CallCancellationTokenSource();
     }
 }

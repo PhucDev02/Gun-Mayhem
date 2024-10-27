@@ -11,24 +11,10 @@ public enum SceneName
     GameplayScene,
     ResultScene
 }
-public class CustomSceneManager : MonoBehaviour
+public class CustomSceneManager : Singleton<CustomSceneManager>
 {
     [SerializeField] private SceneName currentScene;
-    public static CustomSceneManager Instance;
     public SceneName CurrentScene => currentScene;
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(this.gameObject);
-        }
-        else if (Instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-    }
 
     private void OnEnable()
     {

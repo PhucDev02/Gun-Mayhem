@@ -148,6 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 066d212f186303c4b89aa78dca096427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 1
   currentScene: 1
 --- !u!4 &12750521
 Transform:

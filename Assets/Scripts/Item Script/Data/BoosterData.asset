@@ -27,5 +27,5 @@ MonoBehaviour:
     rate: 0
   - effectType: 3
     boosterSpr: {fileID: 8575179032478902733, guid: adcb5fae9aa0a804c860037bd1c6ff1c, type: 3}
-    value: 10
+    value: 5
     rate: 40

@@ -27,6 +27,13 @@ public class PlayerReference : MonoBehaviour
     [Header("Dash System")]
     [SerializeField] private GameObject DashEffect;
     [SerializeField] private SpriteRenderer Sr;
+
+    private void Awake()
+    {
+        var playerController = GetComponent<PlayerController>();
+        playerController.Register(this);
+    }
+
     void OnValidate()
     {
         Rb = GetComponent<Rigidbody2D>();

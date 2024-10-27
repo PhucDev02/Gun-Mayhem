@@ -5,22 +5,38 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private PlayerLives health;
+    private EPlayer ePlayer;
+    [SerializeField]
+    public PlayerLives playerLives;
     [SerializeField]
     private IPlayerAction action;
     public PlayerReference reference;
+
+    public EPlayer EPlayer { get => ePlayer; set => ePlayer = value; }
+
     private void Start()
     {
         action=GetComponent<IPlayerAction>();
     }
-    public void IncreaseHp(int amount)
+
+    public void Register(PlayerReference playerReference)
     {
-        health.IncreaseHp(amount);
+        this.reference = playerReference;
+    }
+
+    public void Register(PlayerLives playerLives)
+    {
+        this.playerLives = playerLives;
+    }
+
+    public void IncreaseLives(int amount)
+    {
+        playerLives.IncreaseHp(amount);
     }
 
     public void BecomeInvisible(int duration)
     {
-        health.ActivateGodMode(duration);
+        playerLives.ActivateGodMode(duration);
     }
 
     public void ChangeSpeed(int speed)

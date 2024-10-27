@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class BoosterSpawner : MonoBehaviour
 {
-    [SerializeField] 
-    private GameObject boosterPrefab;
     [SerializeField]
     public float spawnInterval = 5f;
     private CancellationTokenSource cancellationTokenSource = new();

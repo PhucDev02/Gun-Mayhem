@@ -16,12 +16,22 @@ public class GameController : Singleton<GameController>
     [SerializeField] private PlayerLives[] players;
 
     Vector3 midPoint;
+
+    public override void Awake()
+    {
+        base.Awake();
+        Application.targetFrameRate = 120;
+    }
+
     private void Update()
     {
         midPoint = Vector3.zero;
         for(int i = 0; i < players.Length; i++)
         {
-            midPoint += players[i].transform.position;
+            if (players[i] != null)
+            {
+                midPoint += players[i].transform.position;
+            }
         }
         midPoint/=players.Length;
         transform.position = midPoint;
@@ -30,7 +40,6 @@ public class GameController : Singleton<GameController>
     private void UpdateMeanPlayersDistance()
     {
         CameraController.meanDistancePlayers = Vector3.Distance(players[0].transform.position, players[1].transform.position);
-        Debug.Log(CameraController.meanDistancePlayers);
     }
     public static EPlayer Winner { get => winner; set => winner = value; }
 
@@ -42,7 +51,7 @@ public class GameController : Singleton<GameController>
 
         winner = (players[0].CurrentLives > players[1].CurrentLives) ?
             EPlayer.BluePlayer : EPlayer.RedPlayer;
-        ShowResult();
+        Invoke(nameof(ShowResult), 1f);
     }
 
     private void ShowResult()
