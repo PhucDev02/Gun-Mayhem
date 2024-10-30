@@ -603,11 +603,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputSetting:
     jump: 273
-    drop: 0
+    drop: 274
     left: 276
     right: 275
-    attack: 0
-    dash: 0
+    attack: 13
+    dash: 280
   bulletTag: 3
   Rb: {fileID: 4962468331618072544}
   GroundCheckPoint: {fileID: 6315819145363137751}
@@ -639,7 +639,7 @@ MonoBehaviour:
   showBoundaryBox: 0
   boundaryBoxColor: {r: 1, g: 1, b: 0.4, a: 1}
   parentSize: {x: 150, y: 150}
-  displayRangeMin: 0
+  displayRangeMin: 15
   displayRangeMax: 500
   raycastTarget: 0
   enableSprite: 1
