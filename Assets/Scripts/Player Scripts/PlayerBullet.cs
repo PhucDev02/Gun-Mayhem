@@ -37,6 +37,7 @@ public class PlayerBullet : MonoBehaviour
             PlayerLives EnemyHealth = collision.GetComponent<PlayerLives>();
             if (player != null)
             {
+                ObjectPool.Instance.Spawn(PoolObjectTag.HitText, UIEffectCanvas.Instance.transform).transform.position = collision.ClosestPoint(player.transform.position);
                 player.TakeDamage(GameConfig.data.bulletKnockbackForce,transform.position);
                 ObjectPool.Instance.Recall(this.gameObject);
             }

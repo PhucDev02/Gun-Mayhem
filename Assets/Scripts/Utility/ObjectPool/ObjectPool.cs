@@ -9,6 +9,7 @@ public enum PoolObjectTag
     TowerBullet,
     Bullet1,
     Bullet2,
+    HitText
 }
 
 public class ObjectPool : Singleton<ObjectPool>
@@ -36,7 +37,7 @@ public class ObjectPool : Singleton<ObjectPool>
         return obj;
     }
 
-    public GameObject Spawn(PoolObjectTag tag)
+    public GameObject Spawn(PoolObjectTag tag,Transform parent=null)
     {
         foreach (var pool in Pools)
         {
@@ -47,7 +48,10 @@ public class ObjectPool : Singleton<ObjectPool>
                     if (!obj.activeInHierarchy) 
                     {
                         obj.SetActive(true);
+                        if(parent==null)
                         obj.transform.SetParent(this.transform);
+                        else
+                            obj.transform.SetParent(parent);
                         return obj;
                     }
                 }
