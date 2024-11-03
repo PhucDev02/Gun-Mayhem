@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,11 @@ public class StartSceneUI : MonoBehaviour
 #else
 		Application.Quit();
 #endif
+    }
+    [Button]
+    public void Test()
+    {
+        Debug.Log("Hi");
     }
     public void OnClickBack()
     {
