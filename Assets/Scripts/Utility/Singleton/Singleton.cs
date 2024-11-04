@@ -48,6 +48,6 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             return;
         }
 
-        Debug.Log("SingleAccessPoint instance found " + Instance.GetType().Name);
+        //Debug.Log("SingleAccessPoint instance found " + Instance.GetType().Name);
     }
 }

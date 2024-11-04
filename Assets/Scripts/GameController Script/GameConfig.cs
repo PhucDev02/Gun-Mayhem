@@ -9,6 +9,6 @@ public class GameConfig
     {
         if (data == null)
             data = Resources.Load<GameConfigSO>("GameConfig");
-        Debug.Log("Gameconfig: " + data == null);
+        //Debug.Log("Gameconfig: " + data == null);
     }
 }

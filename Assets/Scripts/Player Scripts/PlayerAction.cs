@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerAction : MonoBehaviour, IPlayerAction
+public class PlayerAction : NetworkBehaviour, IPlayerAction
 {
     private PlayerController controller;
 
@@ -53,20 +54,51 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
 
     }
 
+    bool isGoLeft = false, isGoRight = false, isJump = false, isDown = false;
+
     private void UpdateMovement()
     {
         velocity_X = Mathf.Lerp(velocity_X, 0, GameConfig.data.velocityLerpFactor * Time.deltaTime);
-        if (Input.GetKey(controller.reference.inputSetting.left))
-        {
-            Move(-1);
-            this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
-        }
-        if (Input.GetKey(controller.reference.inputSetting.right))
-        {
-            Move(1);
-            this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
 
+        if(IsOwner == true)
+        {
+            if (NetworkManager.Singleton.IsClient)
+            {
+                SynchMovementServerRpc(new Vector2(0, 0));
+                SynchMovementServerRpc(new Vector2(1, 0));
+            }
+            if (Input.GetKey(controller.reference.inputSetting.left))
+            {
+                Move(-1);
+                this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+                if (NetworkManager.Singleton.IsClient)
+                {
+                    SynchMovementServerRpc(new Vector2(0, 1));
+                }
+            }
+            if (Input.GetKey(controller.reference.inputSetting.right))
+            {
+                Move(1);
+                this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+                if(NetworkManager.Singleton.IsClient)
+                {
+                    SynchMovementServerRpc(new Vector2(1, 1));
+                }
+            }
+        }
+        else
+        {
+            //if (isGoLeft)
+            //{
+            //    Move(-1);
+            //    this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+            //}
+            //if (isGoRight)
+            //{
+            //    Move(1);
+            //    this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+            //}
+        }
         // Movement
 
         controller.reference.SetVelocity(velocity_X * MoveSpeed, float.MaxValue);
@@ -75,31 +107,90 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
         controller.reference.Animator.SetFloat("Y Velocity", controller.reference.Rb.linearVelocity.y);
 
     }
+
+    [ServerRpc]
+    public void SynchMovementServerRpc(Vector2 moveVector)
+    {
+        //if(moveVector.x ==  0)
+        //{
+        //    isGoLeft = moveVector.y == 1 ? true : false;
+        //}
+        //if(moveVector.x == 1)
+        //{
+        //    isGoRight = moveVector.y == 1 ? true : false;
+        //}
+        //if (moveVector.x == 2)
+        //{
+        //    isJump = moveVector.y == 1 ? true : false;
+        //}
+        //if (moveVector.x == 3)
+        //{
+        //    isDown = moveVector.y == 1 ? true : false;
+        //}
+    }
+
+
     private void UpdateDash()
     {
-        if (Input.GetKeyDown(controller.reference.inputSetting.dash) && CurrentDashCoolDown <= 0)
+        if (IsOwner == true)
         {
-            Dash();
+            if (Input.GetKeyDown(controller.reference.inputSetting.dash) && CurrentDashCoolDown <= 0)
+            {
+                Dash();
+            }
         }
     }
 
     private void UpdateJump()
     {
-        if (!Input.GetKeyDown(controller.reference.inputSetting.jump)) return;
-        Jump();
+        if (IsOwner == true)
+        {
+            if (Input.GetKeyDown(controller.reference.inputSetting.jump))
+            {
+                Jump();
+                SynchMovementServerRpc((new Vector2(2, 1)));
+                return;
+            }
+            SynchMovementServerRpc((new Vector2(2, 0)));
+        }
+        else
+        {
+            //if(isJump)
+            //    Jump();
+        }
     }
 
     private void UpdateDrop()
     {
-        if (!Input.GetKeyDown(controller.reference.inputSetting.drop)) return;
-        Drop();
+        if (IsOwner == true)
+        {
+            if (Input.GetKeyDown(controller.reference.inputSetting.drop))
+            {
+                Drop();
+                SynchMovementServerRpc((new Vector2(3, 1)));
+                return;
+            }
+            SynchMovementServerRpc((new Vector2(3, 0)));
+        }
+        else 
+        {
+            //if (isDown)
+            //    Drop();
+        }
     }
 
     private void UpdateAttack()
     {
-        if (Input.GetKey(controller.reference.inputSetting.attack) && CurrentAttackCoolDown <= 0)
+        if (IsOwner == true)
         {
-            RangedAttack();
+            if (Input.GetKey(controller.reference.inputSetting.attack) && CurrentAttackCoolDown <= 0)
+            {
+                RangedAttack();
+            }
+        }
+        else 
+        { 
+        
         }
     }
 

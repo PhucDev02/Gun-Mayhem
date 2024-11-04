@@ -3,6 +3,7 @@ using Unity.Services.Core;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 
 public class TestRelay : MonoBehaviour
@@ -19,10 +20,7 @@ public class TestRelay : MonoBehaviour
     }
 
 
-    //[InspectorButton("CreateRelay")]
-    public bool hoang;
-
-    //[Button]
+    [Button]
     public async void CreateRelay()
     {
         try

@@ -6,9 +6,6 @@ using UnityEngine.UI;
 
 public class PlayerLives : MonoBehaviour
 {
-    [Header("Health Settings")]
-    [SerializeField] private Slider livesSlider;
-
     [Header("UI & Effects")]
     [SerializeField] private GameObject invincibleIndicator;
 
@@ -38,8 +35,6 @@ public class PlayerLives : MonoBehaviour
     {
         currentLives = ConstValue.maxLives;
         spriteRenderer = GetComponent<SpriteRenderer>();
-        livesSlider = GetComponent<Slider>();
-        livesSlider.maxValue = ConstValue.maxLives;
 
         HandleInvincibleForm(false);
         UpdateLives();
