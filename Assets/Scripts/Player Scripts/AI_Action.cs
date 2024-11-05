@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class AI_Action : Agent, IPlayerAction
 {
+    Vector3 initialPosition;
     private PlayerController controller;
 
     [SerializeField] private float MoveSpeed;
@@ -19,39 +20,62 @@ public class AI_Action : Agent, IPlayerAction
     private float CurrentKnockbackTime = 0;
     public override void CollectObservations(VectorSensor sensor)
     {
-        base.CollectObservations(sensor);
+        sensor.AddObservation(IsGrounded);
+        sensor.AddObservation(Abled2DoubleJump);
+
     }
     public override void OnEpisodeBegin()
     {
-        base.OnEpisodeBegin();
+        this.transform.position = initialPosition + Vector3.up * 1;
+        IsGrounded = false;
+        Abled2DoubleJump = false;
+        velocity_X = 0;
+        ReturnDefaultSpeed();
+        CurrentAttackCoolDown = 0;
+        CurrentDashTime = 0;
+        CurrentDashCoolDown = 0;
+        CurrentKnockbackTime = 0;
     }
     public override void OnActionReceived(ActionBuffers actions)
     {
-        base.OnActionReceived(actions);
-    }
-    public override void Initialize()
-    {
-        base.Initialize();
-    }
-    public override void Heuristic(in ActionBuffers actionsOut)
-    {
-        base.Heuristic(actionsOut);
-    }
-    private void Start()
-    {
-        controller = GetComponent<PlayerController>();
-    }
+        var discreteActions = actions.DiscreteActions;
+        if (discreteActions[0] == 1)
+        {
+            Move(1);
+            this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        else if (discreteActions[0] == 2)
+        {
+            Move(-1);
+            this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
 
-    void Update()
-    {
-        UpdateMovement();
-        UpdateAttack();
-        UpdateJump();
-        UpdateDrop();
-        UpdateDash();
+        if (discreteActions[1] == 1)
+        {
+            RangedAttack();
+        }
+        if (discreteActions[2] == 1)
+        {
+            Jump();
+        }
+        if (discreteActions[3] == 1)
+        {
+            Drop();
+        }
 
+
+    }
+    private void Update()
+    {
+        //update movement
+        velocity_X = Mathf.Lerp(velocity_X, 0, GameConfig.data.velocityLerpFactor * Time.deltaTime);
+
+        controller.reference.SetVelocity(velocity_X * MoveSpeed, float.MaxValue);
+        controller.reference.Animator.SetBool("IsGrounded", IsGrounded);
+        controller.reference.Animator.SetFloat("Horizontal Input", Mathf.Abs(velocity_X));
+        controller.reference.Animator.SetFloat("Y Velocity", controller.reference.Rb.linearVelocity.y);
         IsGrounded = controller.reference.IsOnGround();
-
+        //
         if (IsGrounded == true)
         {
             Abled2DoubleJump = true;
@@ -73,12 +97,20 @@ public class AI_Action : Agent, IPlayerAction
             controller.reference.SetVelocity(velocity_X * 3 * MoveSpeed, 0);
             controller.reference.PresentDashShadow();
         }
-
     }
-
+    public override void Initialize()
+    {
+    }
+    public override void Heuristic(in ActionBuffers actionsOut)
+    {
+    }
+    private void Start()
+    {
+        controller = GetComponent<PlayerController>();
+        initialPosition = this.transform.position;
+    }
     private void UpdateMovement()
     {
-        velocity_X = Mathf.Lerp(velocity_X, 0, GameConfig.data.velocityLerpFactor * Time.deltaTime);
         if (Input.GetKey(controller.reference.inputSetting.left))
         {
             Move(-1);
@@ -92,15 +124,10 @@ public class AI_Action : Agent, IPlayerAction
 
         // Movement
 
-        controller.reference.SetVelocity(velocity_X * MoveSpeed, float.MaxValue);
-        controller.reference.Animator.SetBool("IsGrounded", IsGrounded);
-        controller.reference.Animator.SetFloat("Horizontal Input", Mathf.Abs(velocity_X));
-        controller.reference.Animator.SetFloat("Y Velocity", controller.reference.Rb.linearVelocity.y);
-
     }
     private void UpdateDash()
     {
-        if (Input.GetKeyDown(controller.reference.inputSetting.dash) && CurrentDashCoolDown <= 0)
+        if (Input.GetKeyDown(controller.reference.inputSetting.dash))
         {
             Dash();
         }
@@ -120,7 +147,7 @@ public class AI_Action : Agent, IPlayerAction
 
     private void UpdateAttack()
     {
-        if (Input.GetKey(controller.reference.inputSetting.attack) && CurrentAttackCoolDown <= 0)
+        if (Input.GetKey(controller.reference.inputSetting.attack))
         {
             RangedAttack();
         }
@@ -144,6 +171,16 @@ public class AI_Action : Agent, IPlayerAction
 
     public void Jump()
     {
+        if (IsGrounded == true && CurrentDashTime <= 0)
+        {
+            controller.reference.SetVelocity(float.MaxValue, GameConfig.data.jumpForce);
+        }
+
+        if (IsGrounded == false && Abled2DoubleJump == true && CurrentDashTime <= 0)
+        {
+            controller.reference.SetVelocity(float.MaxValue, GameConfig.data.jumpForce);
+            Abled2DoubleJump = false;
+        }
     }
 
     public void Drop()
@@ -156,13 +193,32 @@ public class AI_Action : Agent, IPlayerAction
 
     public void Move(float dir)
     {
+        if (CurrentKnockbackTime > 0) return;
+        if (Mathf.Abs(velocity_X + dir) > Mathf.Abs(dir) * 2) return;
+        else
+            velocity_X += dir;
     }
 
     public void RangedAttack()
     {
+        if (CurrentAttackCoolDown <= 0)
+        {
+            controller.reference.PresentRangeAttack();
+            CurrentAttackCoolDown = GameConfig.data.attackCooldown;
+            // recoil
+            velocity_X += GameConfig.data.recoilFactor * (transform.eulerAngles.y > 90 ? 1 : -1);
+        }
     }
 
     public void TakeDamage(float forceKnockback, Vector2 position)
     {
+        if (controller.playerLives.IsInvincible) return;
+        CurrentKnockbackTime = GameConfig.data.knockbackTime;
+
+        Vector2 norm = (Vector2)transform.position - position;
+        norm.Normalize();
+        norm.y = 0;
+        velocity_X += forceKnockback * (norm.x > 0 ? 1 : -1);
+        controller.reference.SetVelocity(float.MaxValue, controller.reference.Rb.linearVelocityY + norm.y * forceKnockback);
     }
 }
