@@ -18,6 +18,7 @@ public class PlayerAction : NetworkBehaviour, IPlayerAction
     private void Start()
     {
         controller = GetComponent<PlayerController>();
+
     }
 
     void Update()
@@ -54,7 +55,10 @@ public class PlayerAction : NetworkBehaviour, IPlayerAction
 
     }
 
-    bool isGoLeft = false, isGoRight = false, isJump = false, isDown = false;
+    public NetworkVariable<bool> isGoLeft = new NetworkVariable<bool>();
+    public NetworkVariable<bool> isGoRight = new NetworkVariable<bool>();
+    public NetworkVariable<bool> isJump = new NetworkVariable<bool>(); 
+    public NetworkVariable<bool> isDown = new NetworkVariable<bool>();
 
     private void UpdateMovement()
     {
@@ -85,48 +89,51 @@ public class PlayerAction : NetworkBehaviour, IPlayerAction
                     SynchMovementServerRpc(new Vector2(1, 1));
                 }
             }
+            controller.reference.Animator.SetBool("IsGrounded", IsGrounded);
+            controller.reference.Animator.SetFloat("Horizontal Input", Mathf.Abs(velocity_X));
+            controller.reference.Animator.SetFloat("Y Velocity", controller.reference.Rb.linearVelocity.y);
         }
         else
         {
-            //if (isGoLeft)
-            //{
-            //    Move(-1);
-            //    this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
-            //}
-            //if (isGoRight)
-            //{
-            //    Move(1);
-            //    this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-            //}
+            if (isGoLeft.Value == true)
+            {
+                Move(-1);
+                this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+                Debug.LogError("Go Left");
+            }
+            if (isGoRight.Value == true)
+            {
+                Move(1);
+                this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+                Debug.LogError("Go right");
+            }
         }
         // Movement
 
         controller.reference.SetVelocity(velocity_X * MoveSpeed, float.MaxValue);
-        controller.reference.Animator.SetBool("IsGrounded", IsGrounded);
-        controller.reference.Animator.SetFloat("Horizontal Input", Mathf.Abs(velocity_X));
-        controller.reference.Animator.SetFloat("Y Velocity", controller.reference.Rb.linearVelocity.y);
+        
 
     }
 
     [ServerRpc]
     public void SynchMovementServerRpc(Vector2 moveVector)
     {
-        //if(moveVector.x ==  0)
-        //{
-        //    isGoLeft = moveVector.y == 1 ? true : false;
-        //}
-        //if(moveVector.x == 1)
-        //{
-        //    isGoRight = moveVector.y == 1 ? true : false;
-        //}
-        //if (moveVector.x == 2)
-        //{
-        //    isJump = moveVector.y == 1 ? true : false;
-        //}
-        //if (moveVector.x == 3)
-        //{
-        //    isDown = moveVector.y == 1 ? true : false;
-        //}
+        if (moveVector.x == 0)
+        {
+            isGoLeft.Value = moveVector.y == 1 ? true : false;
+        }
+        if (moveVector.x == 1)
+        {
+            isGoRight.Value = moveVector.y == 1 ? true : false;
+        }
+        if (moveVector.x == 2)
+        {
+            isJump.Value = moveVector.y == 1 ? true : false;
+        }
+        if (moveVector.x == 3)
+        {
+            isDown.Value = moveVector.y == 1 ? true : false;
+        }
     }
 
 
@@ -155,8 +162,8 @@ public class PlayerAction : NetworkBehaviour, IPlayerAction
         }
         else
         {
-            //if(isJump)
-            //    Jump();
+            if (isJump.Value == true)
+                Jump();
         }
     }
 
@@ -174,8 +181,8 @@ public class PlayerAction : NetworkBehaviour, IPlayerAction
         }
         else 
         {
-            //if (isDown)
-            //    Drop();
+            if (isDown.Value == true)
+                Drop();
         }
     }
 

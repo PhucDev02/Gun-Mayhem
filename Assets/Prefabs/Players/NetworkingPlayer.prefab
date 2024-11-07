@@ -109,8 +109,7 @@ GameObject:
   - component: {fileID: 7198236685160155475}
   - component: {fileID: 1822106750529156621}
   - component: {fileID: 4700690864434499210}
-  - component: {fileID: 5148426091805189501}
-  - component: {fileID: 7084557022840752973}
+  - component: {fileID: 690012367675461347}
   m_Layer: 7
   m_Name: NetworkingPlayer
   m_TagString: Player
@@ -268,7 +267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3387755619
+  GlobalObjectIdHash: 1789359385
   InScenePlacedSourceGlobalObjectIdHash: 2208080207
   DeferredDespawnTick: 0
   Ownership: 1
@@ -329,7 +328,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e641242ae1e80ff4486a93f1bd9a8565, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  livesSlider: {fileID: 0}
   invincibleIndicator: {fileID: 4852035417058220374}
   invincibilityDuration: 1
   explodeEffectPrefab: {fileID: 8933048366317599467, guid: f31ccce7eb203194fb06cd9b36a75fdc, type: 3}
@@ -609,7 +607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCollider: {fileID: 8061375735855785188}
---- !u!114 &5148426091805189501
+--- !u!114 &690012367675461347
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -618,50 +616,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4219617554342578679}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
+  m_Script: {fileID: 11500000, guid: c2d4ad49085de6d49bbf6d014b0135ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 1
-  AuthorityMode: 0
-  TickSyncChildren: 0
-  UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  SwitchTransformSpaceWhenParented: 0
-  Interpolate: 1
-  SlerpPosition: 0
---- !u!114 &7084557022840752973
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4219617554342578679}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 0
-  AutoUpdateKinematicState: 1
-  AutoSetKinematicOnDespawn: 1
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 784746828855430807}
 --- !u!1 &4302881265184195538
 GameObject:
   m_ObjectHideFlags: 0
