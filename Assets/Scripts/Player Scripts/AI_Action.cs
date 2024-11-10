@@ -103,55 +103,35 @@ public class AI_Action : Agent, IPlayerAction
     }
     public override void Heuristic(in ActionBuffers actionsOut)
     {
+        var discreteActions = actionsOut.DiscreteActions;
+        discreteActions.Clear();
+        if (Input.GetKey(controller.reference.inputSetting.right))
+        {
+            discreteActions[0] = 1;
+        }
+        else if (Input.GetKey(controller.reference.inputSetting.left))
+        {
+            discreteActions[0] = 2;
+        }
+        if (Input.GetKey(controller.reference.inputSetting.attack))
+        {
+            discreteActions[1] = 1;
+        }
+        if (Input.GetKey(controller.reference.inputSetting.jump))
+        {
+            discreteActions[2] = 1;
+        }
+        if (Input.GetKey(controller.reference.inputSetting.drop))
+        {
+            discreteActions[3] = 1;
+        }
     }
     private void Start()
     {
         controller = GetComponent<PlayerController>();
         initialPosition = this.transform.position;
     }
-    private void UpdateMovement()
-    {
-        if (Input.GetKey(controller.reference.inputSetting.left))
-        {
-            Move(-1);
-            this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
-        }
-        if (Input.GetKey(controller.reference.inputSetting.right))
-        {
-            Move(1);
-            this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
 
-        // Movement
-
-    }
-    private void UpdateDash()
-    {
-        if (Input.GetKeyDown(controller.reference.inputSetting.dash))
-        {
-            Dash();
-        }
-    }
-
-    private void UpdateJump()
-    {
-        if (!Input.GetKeyDown(controller.reference.inputSetting.jump)) return;
-        Jump();
-    }
-
-    private void UpdateDrop()
-    {
-        if (!Input.GetKeyDown(controller.reference.inputSetting.drop)) return;
-        Drop();
-    }
-
-    private void UpdateAttack()
-    {
-        if (Input.GetKey(controller.reference.inputSetting.attack))
-        {
-            RangedAttack();
-        }
-    }
 
     public void IncreasePlayerSpeed(float multiplier)
     {

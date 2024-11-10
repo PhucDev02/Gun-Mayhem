@@ -13,6 +13,11 @@ public class StartSceneUI : MonoBehaviour
         //SceneManager.LoadScene("GameplayScene");
         MessageSystem.TriggerEvent(MessageKey.SceneManager.ChangeScene, SceneName.GameplayScene);
     }
+    public void OnClickTrainScene()
+    {
+        //SceneManager.LoadScene("TrainingScene");
+        MessageSystem.TriggerEvent(MessageKey.SceneManager.ChangeScene, SceneName.TrainingScene);
+    }
     public void OnClickTutorial()
     {
         mainUI.SetActive(false);

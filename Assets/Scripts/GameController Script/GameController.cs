@@ -21,6 +21,7 @@ public class GameController : Singleton<GameController>
     {
         base.Awake();
         Application.targetFrameRate = 120;
+        players = FindObjectsOfType<PlayerLives>();
     }
 
     private void Update()
