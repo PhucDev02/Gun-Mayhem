@@ -378,7 +378,7 @@ internal static class Messenger
                 OnListenerRemoved(eventTable, eventType);
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
 
         }

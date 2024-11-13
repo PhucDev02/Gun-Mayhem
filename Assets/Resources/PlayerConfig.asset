@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a6eab3dc4ccab64eba69a2a7ea90751, type: 3}
+  m_Name: PlayerConfig
+  m_EditorClassIdentifier: 
+  playerConfigs:
+  - animator: {fileID: 9100000, guid: b731d7cd3e1ff3044ba2911601f3267e, type: 2}
+    playerIndicator: {fileID: -582852014, guid: e34b2668abafaca48b708c1d955aeccb, type: 3}
+    playerInvincibleIndicator: {fileID: -1842209472, guid: e34b2668abafaca48b708c1d955aeccb, type: 3}
+  - animator: {fileID: 9100000, guid: 92fed1b6e237b2641b0259596275d6fb, type: 2}
+    playerIndicator: {fileID: -1036246156, guid: e34b2668abafaca48b708c1d955aeccb, type: 3}
+    playerInvincibleIndicator: {fileID: 175531767, guid: e34b2668abafaca48b708c1d955aeccb, type: 3}

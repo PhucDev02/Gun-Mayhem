@@ -1,12 +1,35 @@
 using Cysharp.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
+using Unity.Netcode;
 using UnityEngine;
 
-public class BoosterSpawner : MonoBehaviour
+
+[System.Serializable]
+public class BoosterDataPackage : INetworkSerializable
+{
+    public Vector3 spawnPos;
+    public Booster booster;
+
+    public BoosterDataPackage(Vector3 spawnPos, Booster booster)
+    {
+        this.spawnPos = spawnPos;
+        this.booster = booster;
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        throw new System.NotImplementedException();
+    }
+}
+
+
+public class BoosterSpawner : NetworkBehaviour
 {
     [SerializeField]
     public float spawnInterval = 5f;
+    private bool canSpawn = false;
+    private NetworkVariable<BoosterDataPackage> boosterDataPackage = new NetworkVariable<BoosterDataPackage>();
     private CancellationTokenSource cancellationTokenSource = new();
 
     private void Start()
@@ -28,12 +51,9 @@ public class BoosterSpawner : MonoBehaviour
 
                 if (selectedBooster != null)
                 {
-                    GameObject boosterInstance = ObjectPool.Instance.Spawn(PoolObjectTag.Booster);
-                    boosterInstance.transform.position = GetRandomSpawnPosition();
-
-                    BoosterHandler boosterComponent = boosterInstance.GetComponent<BoosterHandler>();
-                    boosterComponent.SetBooster(selectedBooster);
-
+                    var spawnPos = GetRandomSpawnPosition();
+                    SyncBoosterSpawnServerRpc(new BoosterDataPackage(spawnPos, selectedBooster));
+                    
                 }
             }
         }
@@ -41,6 +61,25 @@ public class BoosterSpawner : MonoBehaviour
         {
             Debug.Log("Task was canceled");
         }
+    }
+
+    private void Update()
+    {
+        if(canSpawn)
+        {
+            canSpawn = false;
+            GameObject boosterInstance = ObjectPool.Instance.Spawn(PoolObjectTag.Booster);
+            boosterInstance.transform.position = boosterDataPackage.Value.spawnPos;
+
+            BoosterHandler boosterComponent = boosterInstance.GetComponent<BoosterHandler>();
+            boosterComponent.SetBooster(boosterDataPackage.Value.booster);
+        }
+    }
+
+    [ServerRpc]
+    public void SyncBoosterSpawnServerRpc(BoosterDataPackage boosterDataPackage)
+    {
+        this.boosterDataPackage.Value = boosterDataPackage;
     }
 
     private Vector3 GetRandomSpawnPosition()

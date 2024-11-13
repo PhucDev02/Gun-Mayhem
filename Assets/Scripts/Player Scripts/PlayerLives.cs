@@ -55,7 +55,7 @@ public class PlayerLives : MonoBehaviour
                 HandleDeath();
                 return;
             }
-            transform.position = new Vector3(Random.Range(ConstValue.environmentLimitX.x, ConstValue.environmentLimitX.y), 50f);
+            transform.position = new Vector3(0, 50f);
             playerController.reference.Rb.linearVelocity = Vector3.zero;
         }
     }

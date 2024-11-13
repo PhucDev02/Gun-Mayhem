@@ -12,11 +12,19 @@ public class PlayerController : MonoBehaviour
     private IPlayerAction action;
     public PlayerReference reference;
 
-    public EPlayer EPlayer { get => ePlayer; set => ePlayer = value; }
+    public EPlayer EPlayer { 
+        get => ePlayer; 
+        set  
+        {
+            ePlayer = value;
+            reference.SetPlayer(value);
+        }
+    }
 
     private void Start()
     {
         action=GetComponent<IPlayerAction>();
+        reference.SetPlayer(ePlayer);
     }
 
     public void Register(PlayerReference playerReference)
@@ -28,6 +36,7 @@ public class PlayerController : MonoBehaviour
     {
         this.playerLives = playerLives;
     }
+
 
     public void IncreaseLives(int amount)
     {

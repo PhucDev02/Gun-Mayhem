@@ -591,7 +591,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &221845249
 Transform:
   m_ObjectHideFlags: 0
@@ -1294,6 +1294,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1102686264}
     m_Modifications:
+    - target: {fileID: -2293171081522121679, guid: 96a484031912f2e4faf8572e100d3a7a, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 676113842
+      objectReference: {fileID: 0}
     - target: {fileID: 2515326669185709696, guid: 96a484031912f2e4faf8572e100d3a7a, type: 3}
       propertyPath: offScreenSprite
       value: 
@@ -2925,7 +2929,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1170137107}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8f2e621a4d9c73448ba56e383c2a58ec, type: 3}
   m_Name: 
@@ -3902,6 +3906,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1702781685}
+  - component: {fileID: 1702781686}
   - component: {fileID: 1702781683}
   m_Layer: 0
   m_Name: BoosterSpawner
@@ -3922,6 +3927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d559c0d37e5e6fa4990b07ec7eea6c97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   spawnInterval: 5
 --- !u!4 &1702781685
 Transform:
@@ -3938,6 +3944,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1321801002}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1702781686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702781682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3242119515
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1001 &1711144277
 PrefabInstance:
   m_ObjectHideFlags: 0

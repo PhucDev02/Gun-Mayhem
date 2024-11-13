@@ -219,6 +219,7 @@ GameObject:
   - component: {fileID: 1436339597190745454}
   - component: {fileID: 4962468331618072544}
   - component: {fileID: 2848628057934659330}
+  - component: {fileID: -2293171081522121679}
   - component: {fileID: 1320182584699804087}
   - component: {fileID: 5708042533916280744}
   - component: {fileID: 8570124552543253748}
@@ -387,7 +388,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d0aaba7d4b03b145910a7b2b9854afb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   MoveSpeed: 4
+  playerMovementRpc:
+    m_InternalValue: {x: 0, y: 0}
+  isFireRpc:
+    m_InternalValue: 0
+--- !u!114 &-2293171081522121679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3775668903009342077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3406506878
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!95 &1320182584699804087
 Animator:
   serializedVersion: 7
@@ -473,7 +504,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e641242ae1e80ff4486a93f1bd9a8565, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  livesSlider: {fileID: 0}
   invincibleIndicator: {fileID: 0}
   invincibilityDuration: 1
   explodeEffectPrefab: {fileID: 8933048366317599467, guid: f31ccce7eb203194fb06cd9b36a75fdc, type: 3}
@@ -618,6 +648,8 @@ MonoBehaviour:
   Audio: {fileID: 7630723277271059959}
   DashEffect: {fileID: 6361257137906712321, guid: 69e0262c963b31f4aaf24e6d2d97d54d, type: 3}
   Sr: {fileID: 1983416580465423464}
+  playerIndicator: {fileID: 0}
+  playerInvincibleIndicator: {fileID: 0}
 --- !u!114 &2515326669185709696
 MonoBehaviour:
   m_ObjectHideFlags: 0

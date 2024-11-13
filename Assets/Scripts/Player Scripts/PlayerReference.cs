@@ -28,6 +28,11 @@ public class PlayerReference : MonoBehaviour
     [SerializeField] private GameObject DashEffect;
     [SerializeField] private SpriteRenderer Sr;
 
+    [Header("Indicator")]
+    [SerializeField] private SpriteRenderer playerIndicator;
+    [SerializeField] private SpriteRenderer playerInvincibleIndicator;
+
+
     private void Awake()
     {
         var playerController = GetComponent<PlayerController>();
@@ -41,9 +46,29 @@ public class PlayerReference : MonoBehaviour
         Sr = this.gameObject.GetComponent<SpriteRenderer>();
         Audio = this.gameObject.GetComponent<AudioSource>();
     }
+
+    public void SetPlayer(EPlayer ePlayer)
+    {
+        if(ePlayer == EPlayer.BluePlayer)
+        {
+            bulletTag = PoolObjectTag.Bullet1;
+            Animator.runtimeAnimatorController = Config.player.playerConfigs[0].animator;
+            playerIndicator.sprite = Config.player.playerConfigs[0].playerIndicator;
+            playerInvincibleIndicator.sprite = Config.player.playerConfigs[0].playerInvincibleIndicator;
+            //Animator
+        }
+        else 
+        { 
+            bulletTag= PoolObjectTag.Bullet2;
+            Animator.runtimeAnimatorController = Config.player.playerConfigs[1].animator;
+            playerIndicator.sprite = Config.player.playerConfigs[1].playerIndicator;
+            playerInvincibleIndicator.sprite = Config.player.playerConfigs[1].playerInvincibleIndicator;
+        }
+    }
+
     public bool IsOnGround()
     {
-        return Physics2D.OverlapCircle(GroundCheckPoint.transform.position, GameConfig.data.groundRadiusCheck, GameConfig.data.GroundLayerMask);
+        return Physics2D.OverlapCircle(GroundCheckPoint.transform.position, Config.data.groundRadiusCheck, Config.data.GroundLayerMask);
     }
     public void PresentRangeAttack()
     {
@@ -75,7 +100,7 @@ public class PlayerReference : MonoBehaviour
     }
     public void Recoil()
     {
-        Vector3 recoilDirection = Vector2.left * (transform.rotation.y < 90 ? 1 : -1) * GameConfig.data.recoilFactor;
+        Vector3 recoilDirection = Vector2.left * (transform.rotation.y < 90 ? 1 : -1) * Config.data.recoilFactor;
         Debug.Log(recoilDirection.x);
         Rb.linearVelocity = new Vector2(recoilDirection.x, Rb.linearVelocityY);
     }
