@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - OneWayPlatform
   - Canvas
+  - DeadField
   layers:
   - Default
   - TransparentFX
