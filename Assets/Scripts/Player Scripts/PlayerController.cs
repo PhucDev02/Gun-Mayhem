@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
         {
             ePlayer = value;
             reference.SetPlayer(value);
+            playerLives.UpdateLives();
         }
     }
 
@@ -25,6 +26,16 @@ public class PlayerController : MonoBehaviour
     {
         action=GetComponent<IPlayerAction>();
         reference.SetPlayer(ePlayer);
+    }
+
+    private void OnEnable()
+    {
+        GameController.Instance.RegisterPlayer(this);
+    }
+
+    private void OnDisable()
+    {
+        GameController.Instance.UnRegisterPlayer(this);
     }
 
     public void Register(PlayerReference playerReference)
@@ -36,7 +47,6 @@ public class PlayerController : MonoBehaviour
     {
         this.playerLives = playerLives;
     }
-
 
     public void IncreaseLives(int amount)
     {

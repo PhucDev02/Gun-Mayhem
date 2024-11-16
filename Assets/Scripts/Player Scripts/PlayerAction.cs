@@ -1,9 +1,6 @@
-using Unity.Netcode;
-using Unity.Properties;
-using UnityEditor;
 using UnityEngine;
 
-public class PlayerAction : NetworkBehaviour, IPlayerAction
+public class PlayerAction : MonoBehaviour, IPlayerAction
 {
     private PlayerController controller;
 
@@ -17,33 +14,18 @@ public class PlayerAction : NetworkBehaviour, IPlayerAction
     private float CurrentDashTime = 0;
     private float CurrentDashCoolDown = 0;
     private float CurrentKnockbackTime = 0;
-
     private void Start()
     {
         controller = GetComponent<PlayerController>();
-        //Debug.LogError("IsHost: " + IsHost, gameObject);
-        //Debug.LogError("IsClient: " + IsClient, gameObject);
-        //Debug.LogError("IsServer: " + IsServer, gameObject);
-        //Debug.LogError("IsOwner: " + IsOwner, gameObject);
-        if((IsHost && IsOwner) || (!IsHost && !IsOwner))
-        {
-            controller.EPlayer = EPlayer.BluePlayer;
-            transform.position = new Vector3(-5, 0, 0);
-            transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
-        else
-        {
-            controller.EPlayer = EPlayer.RedPlayer;
-            transform.position = new Vector3(5, 0, 0);
-            transform.rotation = Quaternion.Euler(0, 180, 0);
-        }
     }
 
     void Update()
     {
         UpdateMovement();
-        UpdateJumpUpAndDown();
         UpdateAttack();
+        UpdateJump();
+        UpdateDrop();
+        UpdateDash();
 
         IsGrounded = controller.reference.IsOnGround();
 
@@ -51,153 +33,71 @@ public class PlayerAction : NetworkBehaviour, IPlayerAction
         {
             Abled2DoubleJump = true;
         }
+        CurrentKnockbackTime -= Time.deltaTime;
+        CurrentKnockbackTime = Mathf.Max(CurrentKnockbackTime, 0);
 
-        if(CurrentKnockbackTime > 0) CurrentKnockbackTime -= Time.deltaTime;
-        if(CurrentDashTime > 0) CurrentDashTime -= Time.deltaTime;
-        if(CurrentDashCoolDown > 0) CurrentDashCoolDown -= Time.deltaTime;
-        if(CurrentAttackCoolDown > 0) CurrentAttackCoolDown -= Time.deltaTime;
+        CurrentDashTime -= Time.deltaTime;
+        CurrentDashTime = Mathf.Max(CurrentDashTime, 0);
+
+        CurrentDashCoolDown -= Time.deltaTime;
+        CurrentDashCoolDown = Mathf.Max(CurrentDashCoolDown, 0);
+
+        CurrentAttackCoolDown -= Time.deltaTime;
+        CurrentAttackCoolDown = Mathf.Max(CurrentAttackCoolDown, 0);
+        //dash
+        if (CurrentDashTime > 0 && Mathf.Abs(velocity_X) > 0)
+        {
+            controller.reference.SetVelocity(velocity_X * 3 * MoveSpeed, 0);
+            controller.reference.PresentDashShadow();
+        }
+
     }
-
-    private Vector2 currentInput = Vector2.zero;
-    private Vector2 oldInput = Vector2.zero;
-    private bool lastFire = false, currentFire = false; 
-    public NetworkVariable<Vector2> playerMovementRpc = new NetworkVariable<Vector2>();
-    public NetworkVariable<bool> isFireRpc = new NetworkVariable<bool>();
-
 
     private void UpdateMovement()
     {
         velocity_X = Mathf.Lerp(velocity_X, 0, Config.data.velocityLerpFactor * Time.deltaTime);
-
-        if (IsOwner && IsClient)
-        {
-            if (Input.GetKey(controller.reference.inputSetting.left))
-            {
-                currentInput.x = -1;
-                if (currentInput.x != oldInput.x)
-                {
-                    oldInput.x = currentInput.x;
-                    SynchMovementServerRpc(new Vector2(-1, 100));
-                }
-            }
-            else if (Input.GetKey(controller.reference.inputSetting.right))
-            {
-                currentInput.x = 1;
-                if (currentInput.x != oldInput.x)
-                {
-                    oldInput.x = currentInput.x;
-                    SynchMovementServerRpc(new Vector2(1, 100));
-                }
-            }
-            else
-            {
-                currentInput.x = 0;
-                if (currentInput.x != oldInput.x)
-                {
-                    oldInput.x = currentInput.x;
-                    SynchMovementServerRpc(new Vector2(0, 100));
-                }
-            }
-
-        }
-        
-        if (playerMovementRpc.Value.x == -1)
+        if (Input.GetKey(controller.reference.inputSetting.left))
         {
             Move(-1);
             this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
         }
-        if (playerMovementRpc.Value.x == 1)
+        if (Input.GetKey(controller.reference.inputSetting.right))
         {
             Move(1);
             this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
+
         // Movement
+
+        controller.reference.SetVelocity(velocity_X * MoveSpeed, float.MaxValue);
         controller.reference.Animator.SetBool("IsGrounded", IsGrounded);
         controller.reference.Animator.SetFloat("Horizontal Input", Mathf.Abs(velocity_X));
         controller.reference.Animator.SetFloat("Y Velocity", controller.reference.Rb.linearVelocity.y);
-        controller.reference.SetVelocity(velocity_X * MoveSpeed, float.MaxValue);
-    }
 
-    [ServerRpc]
-    public void SynchMovementServerRpc(Vector2 moveVector)
-    {
-        if (moveVector.x == 100) playerMovementRpc.Value = new Vector2(playerMovementRpc.Value.x, moveVector.y);
-        else if (moveVector.y == 100) playerMovementRpc.Value = new Vector2(moveVector.x, playerMovementRpc.Value.y);
-        else playerMovementRpc.Value = moveVector;
     }
-
-    [ServerRpc]
-    public void SyncFireBulletServerRpc(bool isFire)
+    private void UpdateDash()
     {
-        this.isFireRpc.Value = isFire;
-    }
-
-    private void UpdateJumpUpAndDown()
-    {
-        if (IsOwner && IsClient)
+        if (Input.GetKeyDown(controller.reference.inputSetting.dash) && CurrentDashCoolDown <= 0)
         {
-            if (Input.GetKey(controller.reference.inputSetting.jump))
-            {
-                currentInput.y = 1;
-                if (currentInput.y != oldInput.y)
-                {
-                    oldInput.y = currentInput.y;
-                    SynchMovementServerRpc((new Vector2(100, 1)));
-                }
-            }
-            else if (Input.GetKey(controller.reference.inputSetting.drop))
-            {
-                currentInput.y = -1;
-                if (currentInput.y != oldInput.y)
-                {
-                    oldInput.y = currentInput.y;
-                    SynchMovementServerRpc((new Vector2(100, -1)));
-                }
-            }
-            else
-            {
-                currentInput.y = 0;
-                if (currentInput.y != oldInput.y)
-                {
-                    oldInput.y = currentInput.y;
-                    SynchMovementServerRpc((new Vector2(100, 0)));
-                }
-            }
+            Dash();
         }
-        if (playerMovementRpc.Value.y == 1)
-            Jump();
-        else if (playerMovementRpc.Value.y == -1)
-            Drop();
+    }
+
+    private void UpdateJump()
+    {
+        if (!Input.GetKeyDown(controller.reference.inputSetting.jump)) return;
+        Jump();
+    }
+
+    private void UpdateDrop()
+    {
+        if (!Input.GetKeyDown(controller.reference.inputSetting.drop)) return;
+        Drop();
     }
 
     private void UpdateAttack()
     {
-        if (IsOwner && IsClient)
-        {
-            bool fireInput = Input.GetKey(controller.reference.inputSetting.attack);
-            //if (Input.GetKeyDown(controller.reference.inputSetting.attack) && CurrentAttackCoolDown <= 0)
-            if (fireInput)
-            {
-                currentFire = true;
-                //RangedAttack();
-                if (lastFire != currentFire)
-                {
-                    lastFire = currentFire;
-                    SyncFireBulletServerRpc(true);
-                }
-            }
-            else
-            {
-                currentFire = false;
-                if (lastFire != currentFire)
-                {
-                    lastFire = currentFire;
-                    SyncFireBulletServerRpc(false);
-                }
-            }
-        }
-       
-        if (isFireRpc.Value == true && CurrentAttackCoolDown <= 0)
+        if (Input.GetKey(controller.reference.inputSetting.attack) && CurrentAttackCoolDown <= 0)
         {
             RangedAttack();
         }
@@ -224,18 +124,15 @@ public class PlayerAction : NetworkBehaviour, IPlayerAction
 
     public void Jump()
     {
-        Debug.Log("Call jump");
         if (IsGrounded == true && CurrentDashTime <= 0)
         {
             controller.reference.SetVelocity(float.MaxValue, Config.data.jumpForce);
-            Debug.Log("Jump 1");
         }
 
         if (IsGrounded == false && Abled2DoubleJump == true && CurrentDashTime <= 0)
         {
             controller.reference.SetVelocity(float.MaxValue, Config.data.jumpForce);
             Abled2DoubleJump = false;
-            Debug.Log("Jump 2");
         }
     }
 
@@ -246,7 +143,6 @@ public class PlayerAction : NetworkBehaviour, IPlayerAction
 
     public void RangedAttack()
     {
-        Debug.Log("Shooted");
         controller.reference.PresentRangeAttack();
         CurrentAttackCoolDown = Config.data.attackCooldown;
         // recoil
@@ -255,7 +151,7 @@ public class PlayerAction : NetworkBehaviour, IPlayerAction
 
     public void TakeDamage(float forceKnockback, Vector2 position)
     {
-        if (controller.playerLives.IsInvincible) return;
+
         CurrentKnockbackTime = Config.data.knockbackTime;
 
         Vector2 norm = (Vector2)transform.position - position;

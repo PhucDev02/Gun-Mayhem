@@ -67,6 +67,16 @@ public class BoosterHandler : MonoBehaviour
         Init();
     }
 
+    public void SetBooster(int boosterId)
+    {
+        this.booster = BoosterManager.Instance.GetBoosterViaId(boosterId);
+        if (boosterSpr != null && booster.boosterSpr != null)
+        {
+            boosterSpr.sprite = booster.boosterSpr;
+        }
+        Init();
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag.Equals("Player"))

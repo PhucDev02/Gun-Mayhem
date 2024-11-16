@@ -60,7 +60,7 @@ public class PlayerLives : MonoBehaviour
         }
     }
 
-    private void UpdateLives(int amount = 0)
+    public void UpdateLives(int amount = 0)
     {
         currentLives = (currentLives + amount <= 0) ? 0 :
                (currentLives + amount >= ConstValue.maxLives) ? ConstValue.maxLives :
