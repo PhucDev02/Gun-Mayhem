@@ -35,7 +35,7 @@ public class BoosterManager : MonoBehaviour
         return null;
     }
 
-    public void ActivateBooster(Booster booster, PlayerController playerSystem)
+    public void ActivateBooster(Booster booster, PlayerBehavior playerSystem)
     {
         switch (booster.effectType)
         {

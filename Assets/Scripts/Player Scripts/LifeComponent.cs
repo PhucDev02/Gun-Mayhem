@@ -4,11 +4,8 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerLives : MonoBehaviour
+public class LifeComponent : ActorComponent
 {
-    [Header("Health Settings")]
-    [SerializeField] private Slider livesSlider;
-
     [Header("UI & Effects")]
     [SerializeField] private GameObject invincibleIndicator;
 
@@ -20,26 +17,15 @@ public class PlayerLives : MonoBehaviour
     [Header("Damage & Invincibility")]
     [Tooltip("Time duration for invincibility after taking damage")]
     [SerializeField] private float invincibilityDuration = 1f;
-    private SpriteRenderer spriteRenderer;
-
     [Header("Death Effect")]
     [SerializeField] private GameObject explodeEffectPrefab;
 
     private CancellationTokenSource cancellationTokenSource = new();
-    private PlayerController playerController;
 
-    private void Awake()
-    {
-        playerController = GetComponent<PlayerController>();
-        playerController.Register(this);
-    }
 
     void Start()
     {
         currentLives = ConstValue.maxLives;
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        livesSlider = GetComponent<Slider>();
-        livesSlider.maxValue = ConstValue.maxLives;
 
         HandleInvincibleForm(false);
         UpdateLives();
@@ -55,7 +41,7 @@ public class PlayerLives : MonoBehaviour
         if (transform.position.y <= -12.5f)
         {
             UpdateLives(-1);
-            if (GetComponent<PlayerController>().ePlayer == EPlayer.AI)
+            if (GetComponent<Actor>().type == EPlayer.AI)
                 Messenger.Broadcast(EventKey.OnDie);
             if (currentLives <= 0)
             {
@@ -63,7 +49,7 @@ public class PlayerLives : MonoBehaviour
                 return;
             }
             transform.position = new Vector3(Random.Range(ConstValue.environmentLimitX.x, ConstValue.environmentLimitX.y), 50f);
-            playerController.reference.Rb.linearVelocity = Vector3.zero;
+            actor.rb.linearVelocity = Vector3.zero;
         }
     }
 
@@ -72,7 +58,7 @@ public class PlayerLives : MonoBehaviour
         currentLives = (currentLives + amount <= 0) ? 0 :
                (currentLives + amount >= ConstValue.maxLives) ? ConstValue.maxLives :
                currentLives + amount;
-        MessageSystem.TriggerEvent(MessageKey.UI.UpdatePlayerLives, playerController.EPlayer, currentLives);
+        MessageSystem.TriggerEvent(MessageKey.UI.UpdatePlayerLives, actor.type, currentLives);
     }
 
     private void HandleDeath()

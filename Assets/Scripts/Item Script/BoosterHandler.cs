@@ -71,7 +71,7 @@ public class BoosterHandler : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Player"))
         {
-            PlayerController playerSystem = collision.gameObject.GetComponent<PlayerController>();
+            PlayerBehavior playerSystem = collision.gameObject.GetComponent<PlayerBehavior>();
             BoosterManager.Instance.ActivateBooster(booster, playerSystem);
             RecallBooster();
         }

@@ -8,7 +8,7 @@ public class SpikeLogic : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         { 
-            PlayerLives PlayerHP = collision.GetComponent<PlayerLives>();
+            LifeComponent PlayerHP = collision.GetComponent<LifeComponent>();
         }
     }
 }

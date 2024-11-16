@@ -43,8 +43,8 @@ public class PlayerBullet : MonoBehaviour
     {
         if (collision.tag == "Player" || collision.tag == "Ground" || collision.tag == "Player Bullet")
         {
-            PlayerController player = collision.GetComponent<PlayerController>();
-            PlayerLives EnemyHealth = collision.GetComponent<PlayerLives>();
+            PlayerBehavior player = collision.GetComponent<PlayerBehavior>();
+            LifeComponent EnemyHealth = collision.GetComponent<LifeComponent>();
             if (player != null)
             {
                 ObjectPool.Instance.Spawn(PoolObjectTag.HitText, UIEffectCanvas.Instance.transform).transform.position = collision.ClosestPoint(player.transform.position);

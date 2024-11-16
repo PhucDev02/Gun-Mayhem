@@ -8,7 +8,7 @@ public class AttackPointLogic : MonoBehaviour
     {
         if (collision.tag == "Player")
         { 
-            PlayerLives EnemyHealth = collision.GetComponent<PlayerLives>();
+            LifeComponent EnemyHealth = collision.GetComponent<LifeComponent>();
         }
     }
 }

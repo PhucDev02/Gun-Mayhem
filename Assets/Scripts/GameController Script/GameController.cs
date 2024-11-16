@@ -14,7 +14,7 @@ public enum EPlayer
 public class GameController : Singleton<GameController>
 {
     private static EPlayer winner;
-    [SerializeField] private PlayerLives[] players;
+    [SerializeField] private LifeComponent[] players;
 
     Vector3 midPoint;
 
@@ -22,7 +22,7 @@ public class GameController : Singleton<GameController>
     {
         base.Awake();
         Application.targetFrameRate = 120;
-        players = FindObjectsOfType<PlayerLives>();
+        players = FindObjectsOfType<LifeComponent>();
     }
 
     private void Update()
