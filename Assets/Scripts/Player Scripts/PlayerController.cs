@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField]
-    private EPlayer ePlayer;
+    public EPlayer ePlayer;
     [SerializeField]
     public PlayerLives playerLives;
     [SerializeField]

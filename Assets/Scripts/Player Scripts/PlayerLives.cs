@@ -55,6 +55,8 @@ public class PlayerLives : MonoBehaviour
         if (transform.position.y <= -12.5f)
         {
             UpdateLives(-1);
+            if (GetComponent<PlayerController>().ePlayer == EPlayer.AI)
+                Messenger.Broadcast(EventKey.OnDie);
             if (currentLives <= 0)
             {
                 HandleDeath();

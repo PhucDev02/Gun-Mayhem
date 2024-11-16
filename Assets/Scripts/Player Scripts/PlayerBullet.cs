@@ -5,8 +5,14 @@ using UnityEngine;
 
 public class PlayerBullet : MonoBehaviour
 {
+    [SerializeField] EPlayer from;
     [SerializeField] private SpriteRenderer sr;
     float spawnTime;
+    public void Setup(EPlayer from,Transform fromTransform)
+    {
+        this.from = from;
+        transform.SetLocalPositionAndRotation(fromTransform.position, fromTransform.rotation);
+    }
     private void OnEnable()
     {
         spawnTime = Time.time;
@@ -25,6 +31,10 @@ public class PlayerBullet : MonoBehaviour
     {
         sr.DOFade(0, 0.5f).OnComplete(() =>
         {
+            if (from == EPlayer.AI)
+            {
+                Messenger.Broadcast(EventKey.OnMissTarget);
+            }
             ObjectPool.Instance.Recall(this.gameObject);
         });
     }
@@ -38,8 +48,12 @@ public class PlayerBullet : MonoBehaviour
             if (player != null)
             {
                 ObjectPool.Instance.Spawn(PoolObjectTag.HitText, UIEffectCanvas.Instance.transform).transform.position = collision.ClosestPoint(player.transform.position);
-                player.TakeDamage(GameConfig.data.bulletKnockbackForce,transform.position);
+                player.TakeDamage(GameConfig.data.bulletKnockbackForce, transform.position);
                 ObjectPool.Instance.Recall(this.gameObject);
+                if (from == EPlayer.AI)
+                {
+                    Messenger.Broadcast(EventKey.OnHitTarget);
+                }
             }
 
             ObjectPool.Instance.Recall(this.gameObject);

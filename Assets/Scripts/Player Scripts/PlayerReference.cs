@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerReference : MonoBehaviour
 {
+    [SerializeField] PlayerController controller;
     public InputSetting inputSetting;
     [SerializeField] PoolObjectTag bulletTag;
 
@@ -20,7 +21,7 @@ public class PlayerReference : MonoBehaviour
     public Animator Animator;
 
     [Header("Attack System")]
-    [SerializeField] private GameObject AttackPoint;
+    [SerializeField] private Transform AttackPoint;
     [SerializeField] private AudioClip AttackSound;
     [SerializeField] private AudioSource Audio;
 
@@ -50,7 +51,7 @@ public class PlayerReference : MonoBehaviour
         Animator.SetTrigger("Attack");
         Audio.PlayOneShot(AttackSound);
         var bullet = ObjectPool.Instance.Spawn(bulletTag);
-        bullet.transform.SetLocalPositionAndRotation(AttackPoint.transform.position, AttackPoint.transform.rotation);
+        bullet.GetComponent<PlayerBullet>().Setup(controller.ePlayer, AttackPoint);
         //Recoil();
     }
     public void SetVelocity(float x = float.MaxValue, float y = float.MaxValue)

@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 public enum EPlayer
 {
     BluePlayer,
-    RedPlayer
+    RedPlayer,
+    AI
 }
 
 public class GameController : Singleton<GameController>
@@ -58,5 +59,9 @@ public class GameController : Singleton<GameController>
     private void ShowResult()
     {
         MessageSystem.TriggerEvent(MessageKey.SceneManager.ChangeScene, SceneName.ResultScene);
+    }
+    public Vector2 GetTargetPosition()
+    {
+        return players[0].transform.position;
     }
 }

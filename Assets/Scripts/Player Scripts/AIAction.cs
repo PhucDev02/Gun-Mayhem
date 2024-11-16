@@ -1,9 +1,10 @@
+using System;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 
-public class AI_Action : Agent, IPlayerAction
+public class AIAction : Agent, IPlayerAction
 {
     Vector3 initialPosition;
     private PlayerController controller;
@@ -22,7 +23,8 @@ public class AI_Action : Agent, IPlayerAction
     {
         sensor.AddObservation(IsGrounded);
         sensor.AddObservation(Abled2DoubleJump);
-
+        sensor.AddObservation(CurrentAttackCoolDown);
+        sensor.AddObservation(GameController.Instance.GetTargetPosition());
     }
     public override void OnEpisodeBegin()
     {
@@ -130,8 +132,41 @@ public class AI_Action : Agent, IPlayerAction
     {
         controller = GetComponent<PlayerController>();
         initialPosition = this.transform.position;
+        AddListener();
+    }
+    private void OnDestroy()
+    {
+        RemoveListener();
     }
 
+    private void RemoveListener()
+    {
+        Messenger.RemoveListener(EventKey.OnHitTarget, OnHitTarget);
+        Messenger.RemoveListener(EventKey.OnMissTarget, OnMissTarget);
+        Messenger.RemoveListener(EventKey.OnDie, OnDie);
+    }
+
+    private void AddListener()
+    {
+        Messenger.AddListener(EventKey.OnHitTarget, OnHitTarget);
+        Messenger.AddListener(EventKey.OnMissTarget, OnMissTarget);
+        Messenger.AddListener(EventKey.OnDie, OnDie);
+    }
+
+    private void OnDie()
+    {
+        AddReward(-1);
+    }
+
+    private void OnMissTarget()
+    {
+        AddReward(-0.5f);
+    }
+
+    private void OnHitTarget()
+    {
+        AddReward(1);
+    }
 
     public void IncreasePlayerSpeed(float multiplier)
     {
@@ -201,4 +236,5 @@ public class AI_Action : Agent, IPlayerAction
         velocity_X += forceKnockback * (norm.x > 0 ? 1 : -1);
         controller.reference.SetVelocity(float.MaxValue, controller.reference.Rb.linearVelocityY + norm.y * forceKnockback);
     }
+    
 }

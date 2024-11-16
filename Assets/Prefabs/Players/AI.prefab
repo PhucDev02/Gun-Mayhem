@@ -572,7 +572,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb8225c5dca696e4aba92f98051a3b7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ePlayer: 1
+  ePlayer: 2
   playerLives: {fileID: 8570124552543253748}
   reference: {fileID: 6920781030773330224}
 --- !u!82 &7630723277271059959
@@ -684,6 +684,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c3bdba5d6b17cf4eb16cf5924ea0b9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 8081283638348359570}
   inputSetting:
     jump: 273
     drop: 274
@@ -836,7 +837,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 2
+    VectorObservationSize: 5
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0

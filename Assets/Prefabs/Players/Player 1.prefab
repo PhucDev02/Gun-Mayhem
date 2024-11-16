@@ -663,6 +663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c3bdba5d6b17cf4eb16cf5924ea0b9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 1059392921342838323}
   inputSetting:
     jump: 119
     drop: 115
