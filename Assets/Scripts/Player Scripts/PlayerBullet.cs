@@ -5,8 +5,14 @@ using UnityEngine;
 
 public class PlayerBullet : MonoBehaviour
 {
+    [SerializeField] EPlayer from;
     [SerializeField] private SpriteRenderer sr;
     float spawnTime;
+    public void Setup(EPlayer from,Transform fromTransform)
+    {
+        this.from = from;
+        transform.SetLocalPositionAndRotation(fromTransform.position, fromTransform.rotation);
+    }
     private void OnEnable()
     {
         spawnTime = Time.time;
@@ -14,7 +20,7 @@ public class PlayerBullet : MonoBehaviour
     }
     void Update()
     {
-        this.gameObject.transform.Translate(this.gameObject.transform.InverseTransformDirection(transform.right * Config.data.bulletMoveSpeed * Time.deltaTime));
+        this.gameObject.transform.Translate(this.gameObject.transform.InverseTransformDirection(transform.right * GameConfig.data.bulletMoveSpeed * Time.deltaTime));
         if (Time.time - spawnTime > 2.5f)
         {
             Deactive();
@@ -25,6 +31,10 @@ public class PlayerBullet : MonoBehaviour
     {
         sr.DOFade(0, 0.5f).OnComplete(() =>
         {
+            if (from == EPlayer.AI)
+            {
+                Messenger.Broadcast(EventKey.OnMissTarget);
+            }
             ObjectPool.Instance.Recall(this.gameObject);
         });
     }
@@ -33,15 +43,14 @@ public class PlayerBullet : MonoBehaviour
     {
         if (collision.tag == "Player" || collision.tag == "Ground" || collision.tag == "Player Bullet")
         {
-            PlayerController player = collision.GetComponent<PlayerController>();
-            PlayerLives EnemyHealth = collision.GetComponent<PlayerLives>();
-            if (player != null)
+            Actor actor = collision.GetComponent<Actor>();
+            if (actor != null)
             {
-                ObjectPool.Instance.Spawn(PoolObjectTag.HitText, UIEffectCanvas.Instance.transform).transform.position = collision.ClosestPoint(player.transform.position);
-                player.TakeDamage(Config.data.bulletKnockbackForce,transform.position);
+                ObjectPool.Instance.Spawn(PoolObjectTag.HitText, UIEffectCanvas.Instance.transform).transform.position = collision.ClosestPoint(actor.transform.position);
+                actor.action.TakeDamage(GameConfig.data.bulletKnockbackForce, transform.position);
                 ObjectPool.Instance.Recall(this.gameObject);
             }
-
+            else
             ObjectPool.Instance.Recall(this.gameObject);
         }
 

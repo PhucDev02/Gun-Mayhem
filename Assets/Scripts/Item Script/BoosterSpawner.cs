@@ -30,7 +30,7 @@ public class BoosterSpawner : MonoBehaviour
                 if (selectedBooster != null)
                 {
                     GameObject boosterInstance = ObjectPool.Instance.Spawn(PoolObjectTag.Booster);
-                    boosterInstance.transform.position = GetRandomSpawnPosition();
+                    boosterInstance.transform.localPosition = GetRandomSpawnPosition();
 
                     BoosterHandler boosterComponent = boosterInstance.GetComponent<BoosterHandler>();
                     boosterComponent.SetBooster(selectedBooster);

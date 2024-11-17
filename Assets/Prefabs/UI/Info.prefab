@@ -508,6 +508,7 @@ GameObject:
   - component: {fileID: 5618741401915306227}
   - component: {fileID: 4797693176234456074}
   - component: {fileID: 4972949070443028527}
+  - component: {fileID: 371982799955073886}
   m_Layer: 5
   m_Name: Info
   m_TagString: Untagged
@@ -578,6 +579,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &371982799955073886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6626780964502287859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71fe9c75d8c050f498b1fb9aaf022f78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: {fileID: 1102672460913670661}
+  lives: {fileID: 1481477065002032977}
+  avatar: {fileID: 9196623338756174427}
+  redPlayer: {fileID: 9033512161936005711, guid: c3b8c6140c169bc4e9fc505dbe8915f7, type: 3}
+  bluePlayer: {fileID: -4430301077473570794, guid: 1b4e98215a1db94449adb6fcb75930ed, type: 3}
+  AIPlayer: {fileID: 9033512161936005711, guid: c3b8c6140c169bc4e9fc505dbe8915f7, type: 3}
 --- !u!1 &7961339408076738527
 GameObject:
   m_ObjectHideFlags: 0

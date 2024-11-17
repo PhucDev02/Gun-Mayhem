@@ -1,10 +1,6 @@
 ﻿public enum EventKey
 {
-    OnSelectBox,
-    OnStartLevel,
-    OnBoxStartMoveToTable,
-    OnBoxMoveAway,
-    OnCupMoveToTray,
-    OnRemainCupUpdate,
-    OnUseBooster,
+    OnHitDummy,
+    OnMissTarget,
+    OnDie,
 }

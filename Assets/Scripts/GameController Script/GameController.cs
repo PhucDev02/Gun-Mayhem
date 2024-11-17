@@ -1,45 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public enum EPlayer
 {
     BluePlayer,
-    RedPlayer
+    RedPlayer,
+    AI,
+    Dummy
 }
 
 [DefaultExecutionOrder(-1)]
 public class GameController : Singleton<GameController>
 {
     private static EPlayer winner;
-    public static EPlayer Winner { get => winner; set => winner = value; }
-    [SerializeField] private List<PlayerController> players = new List<PlayerController>();
+    public Actor[] players;
 
     Vector3 midPoint;
-
-    public void RegisterPlayer(PlayerController p)
-    {
-        if (!players.Contains(p))
-            players.Add(p);
-    }
-
-    public void UnRegisterPlayer(PlayerController p)
-    {
-        if(players.Contains(p))
-            players.Remove(p);
-    }
 
     public override void Awake()
     {
         base.Awake();
         Application.targetFrameRate = 120;
+        players = FindObjectsByType<Actor>(FindObjectsSortMode.None);
     }
 
     private void Update()
     {
-        if (players.Count != 2) return;
         midPoint = Vector3.zero;
         for(int i = 0; i < players.Count; i++)
         {
@@ -63,8 +53,8 @@ public class GameController : Singleton<GameController>
         if (isSetResult) return;
         isSetResult = true;
 
-        winner = (players[0].playerLives.CurrentLives > players[1].playerLives.CurrentLives) ?
-            players[0].EPlayer : players[1].EPlayer;
+        winner = (players[0].life.CurrentLives > players[1].life.CurrentLives) ?
+            EPlayer.BluePlayer : EPlayer.RedPlayer;
         Invoke(nameof(ShowResult), 1f);
     }
 
@@ -72,9 +62,13 @@ public class GameController : Singleton<GameController>
     {
         MessageSystem.TriggerEvent(MessageKey.SceneManager.ChangeScene, SceneName.ResultScene);
     }
-
-    public int GetTotalPlayer()
+    public Vector2 GetTargetPosition()
     {
-        return players.Count;
+        foreach(var x in players)
+        {
+            if (x.type != EPlayer.AI)
+                return (Vector2) x.transform.position;
+        }
+        return Vector2.zero;
     }
 }

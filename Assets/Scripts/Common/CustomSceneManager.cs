@@ -9,7 +9,8 @@ public enum SceneName
     None,
     StartScene,
     GameplayScene,
-    ResultScene
+    ResultScene,
+    TrainingScene
 }
 public class CustomSceneManager : Singleton<CustomSceneManager>
 {

@@ -40,17 +40,17 @@ public class BoosterManager : MonoBehaviour
         return BoosterArr[id];
     }
 
-    public void ActivateBooster(Booster booster, PlayerController playerSystem)
+    public void ActivateBooster(Booster booster, Actor actor)
     {
         switch (booster.effectType)
         {
             case BoosterEffectType.IncreaseLives:
-                playerSystem.IncreaseLives(booster.value);
+                actor.IncreaseLives(booster.value);
                 Debug.Log("Increased HP by: " + booster.value);
                 break;
 
             case BoosterEffectType.IncreaseSpeed:
-                playerSystem.ChangeSpeed(booster.value);
+                actor.ChangeSpeed(booster.value);
                 Debug.Log("Increased Speed by: " + booster.value);
                 break;
 
@@ -60,7 +60,7 @@ public class BoosterManager : MonoBehaviour
                 break;
 
             case BoosterEffectType.BecomeInvisible:
-                playerSystem.BecomeInvisible(booster.value);
+                actor.BecomeInvisible(booster.value);
                 Debug.Log("Became Invisible for: " + booster.value + " seconds");
                 break;
 

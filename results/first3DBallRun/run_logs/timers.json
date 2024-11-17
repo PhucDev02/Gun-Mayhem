@@ -1,0 +1,47 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1730855626",
+        "python_version": "3.10.9 (tags/v3.10.9:1dd9be6, Dec  6 2022, 20:01:21) [MSC v.1934 64 bit (AMD64)]",
+        "command_line_arguments": "D:\\Unity Project\\Gun-Mayhem\\venv\\Scripts\\mlagents-learn config/ppo/3DBall.yaml --run-id=first3DBallRun",
+        "mlagents_version": "1.1.0",
+        "mlagents_envs_version": "1.1.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.2.2+cu121",
+        "numpy_version": "1.23.5",
+        "end_time_seconds": "1730855637"
+    },
+    "total": 10.916635400000018,
+    "count": 1,
+    "self": 0.004275699999993776,
+    "children": {
+        "run_training.setup": {
+            "total": 0.10700770000005377,
+            "count": 1,
+            "self": 0.10700770000005377
+        },
+        "TrainerController.start_learning": {
+            "total": 10.80535199999997,
+            "count": 1,
+            "self": 0.00032640000006267655,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 10.805013799999983,
+                    "count": 1,
+                    "self": 10.805013799999983
+                },
+                "trainer_threads": {
+                    "total": 6.999999868639861e-07,
+                    "count": 1,
+                    "self": 6.999999868639861e-07
+                },
+                "TrainerController._save_models": {
+                    "total": 1.1099999937869143e-05,
+                    "count": 1,
+                    "self": 1.1099999937869143e-05
+                }
+            }
+        }
+    }
+}
