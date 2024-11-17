@@ -27,11 +27,11 @@ public class RegularActionComponent : ActionComponent
 
     private bool IsOnGround()
     {
-        return Physics2D.OverlapCircle(GroundCheckPoint.transform.position, GameConfig.data.groundRadiusCheck, GameConfig.data.GroundLayerMask);
+        return Physics2D.OverlapCircle(GroundCheckPoint.transform.position, Config.data.groundRadiusCheck, Config.data.GroundLayerMask);
     }
     private void UpdateMovement()
     {
-        velocity_X = Mathf.Lerp(velocity_X, 0, GameConfig.data.velocityLerpFactor * Time.deltaTime);
+        velocity_X = Mathf.Lerp(velocity_X, 0, Config.data.velocityLerpFactor * Time.deltaTime);
 
         actor.SetVelocity(velocity_X * MoveSpeed, float.MaxValue);
         actor.Animator.SetBool("IsGrounded", IsGrounded);
@@ -43,13 +43,13 @@ public class RegularActionComponent : ActionComponent
     public override void IncreasePlayerSpeed(float multiplier)
     {
         CancelInvoke(nameof(ReturnDefaultSpeed));
-        this.MoveSpeed = multiplier * GameConfig.data.moveSpeed;
+        this.MoveSpeed = multiplier * Config.data.moveSpeed;
         Invoke(nameof(ReturnDefaultSpeed), 10);
     }
 
     private void ReturnDefaultSpeed()
     {
-        this.MoveSpeed = GameConfig.data.moveSpeed;
+        this.MoveSpeed = Config.data.moveSpeed;
     }
     public override void Move(float dir)
     {
@@ -72,12 +72,12 @@ public class RegularActionComponent : ActionComponent
     {
         if (IsGrounded == true)
         {
-            actor.SetVelocity(float.MaxValue, GameConfig.data.jumpForce);
+            actor.SetVelocity(float.MaxValue, Config.data.jumpForce);
         }
 
         if (IsGrounded == false && Abled2DoubleJump == true)
         {
-            actor.SetVelocity(float.MaxValue, GameConfig.data.jumpForce);
+            actor.SetVelocity(float.MaxValue, Config.data.jumpForce);
             Abled2DoubleJump = false;
         }
     }
@@ -91,14 +91,14 @@ public class RegularActionComponent : ActionComponent
     {
         if (CurrentAttackCoolDown > 0) return;
         PresentRangeAttack();
-        CurrentAttackCoolDown = GameConfig.data.attackCooldown;
+        CurrentAttackCoolDown = Config.data.attackCooldown;
         // recoil
-        velocity_X += GameConfig.data.recoilFactor * (transform.eulerAngles.y > 90 ? 1 : -1);
+        velocity_X += Config.data.recoilFactor * (transform.eulerAngles.y > 90 ? 1 : -1);
     }
     public override void TakeDamage(float forceKnockback, Vector2 position)
     {
         if (actor.life.IsInvincible) return;
-        CurrentKnockbackTime = GameConfig.data.knockbackTime;
+        CurrentKnockbackTime = Config.data.knockbackTime;
 
         Vector2 norm = (Vector2)transform.position - position;
         norm.Normalize();

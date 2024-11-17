@@ -3,9 +3,9 @@ using Unity.Properties;
 using UnityEditor;
 using UnityEngine;
 
-public class Network_Action : NetworkBehaviour, IPlayerAction
+public class Network_Action : NetworkPlayerBehaviour
 {
-    private PlayerController controller;
+    private Actor controller;
 
     [SerializeField] private float MoveSpeed;
     private float velocity_X;
@@ -28,20 +28,20 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
 
     private void Start()
     {
-        controller = GetComponent<PlayerController>();
+        //controller = GetComponent<PlayerController>();
         //Debug.LogError("IsHost: " + IsHost, gameObject);
         //Debug.LogError("IsClient: " + IsClient, gameObject);
         //Debug.LogError("IsServer: " + IsServer, gameObject);
         //Debug.LogError("IsOwner: " + IsOwner, gameObject);
         if ((IsHost && IsOwner) || (!IsHost && !IsOwner))
         {
-            controller.EPlayer = EPlayer.BluePlayer;
+            controller.type = EPlayer.BluePlayer;
             transform.SetPositionAndRotation(new Vector3(-5, 0, 0), 
                 Quaternion.Euler(0, 0, 0));
         }
         else
         {
-            controller.EPlayer = EPlayer.RedPlayer;
+            controller.type = EPlayer.RedPlayer;
             transform.SetPositionAndRotation(new Vector3(5, 0, 0), 
                 Quaternion.Euler(0, 180, 0));
         }
@@ -53,7 +53,7 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
         UpdateJumpUpAndDown();
         UpdateAttack();
 
-        IsGrounded = controller.reference.IsOnGround();
+        //IsGrounded = controller.reference.IsOnGround();
 
         if (IsGrounded == true)
         {
@@ -77,19 +77,18 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
     {
         if (IsOwner && IsClient)
         {
-            if (Input.GetKey(controller.reference.inputSetting.left))
-            {
-                currentInputX = -1;
-            }
-            else if (Input.GetKey(controller.reference.inputSetting.right))
-            {
-                currentInputX = 1;
-            }
-            else
-            {
-                currentInputX = 0;
-
-            }
+            //if (Input.GetKey(controller.reference.inputSetting.left))
+            //{
+            //    currentInputX = -1;
+            //}
+            //else if (Input.GetKey(controller.reference.inputSetting.right))
+            //{
+            //    currentInputX = 1;
+            //}
+            //else
+            //{
+            //    currentInputX = 0;
+            //}
 
             if (currentInputX != oldInputX)
             {
@@ -112,10 +111,10 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
         }
 
         // Movement
-        controller.reference.Animator.SetBool("IsGrounded", IsGrounded);
-        controller.reference.Animator.SetFloat("Horizontal Input", Mathf.Abs(velocity_X));
-        controller.reference.Animator.SetFloat("Y Velocity", controller.reference.Rb.linearVelocity.y);
-        controller.reference.SetVelocity(velocity_X * MoveSpeed, float.MaxValue);
+        //controller.reference.Animator.SetBool("IsGrounded", IsGrounded);
+        //controller.reference.Animator.SetFloat("Horizontal Input", Mathf.Abs(velocity_X));
+        //controller.reference.Animator.SetFloat("Y Velocity", controller.reference.Rb.linearVelocity.y);
+        //controller.reference.SetVelocity(velocity_X * MoveSpeed, float.MaxValue);
     }
 
 
@@ -128,18 +127,18 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
     {
         if (IsOwner && IsClient)
         {
-            if (Input.GetKey(controller.reference.inputSetting.jump))
-            {
-                currentInputY = 1;
-            }
-            else if (Input.GetKey(controller.reference.inputSetting.drop))
-            {
-                currentInputY = -1;
-            }
-            else
-            {
-                currentInputY = 0;
-            }
+            //if (Input.GetKey(controller.reference.inputSetting.jump))
+            //{
+            //    currentInputY = 1;
+            //}
+            //else if (Input.GetKey(controller.reference.inputSetting.drop))
+            //{
+            //    currentInputY = -1;
+            //}
+            //else
+            //{
+            //    currentInputY = 0;
+            //}
 
             if (currentInputY != oldInputY)
             {
@@ -161,26 +160,26 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
     {
         if (IsOwner && IsClient)
         {
-            bool fireInput = Input.GetKey(controller.reference.inputSetting.attack);
-            if (fireInput)
-            {
-                currentFire = true;
-                //RangedAttack();
-                if (lastFire != currentFire)
-                {
-                    lastFire = currentFire;
-                    SyncFireBulletServerRpc(true);
-                }
-            }
-            else
-            {
-                currentFire = false;
-                if (lastFire != currentFire)
-                {
-                    lastFire = currentFire;
-                    SyncFireBulletServerRpc(false);
-                }
-            }
+            //bool fireInput = Input.GetKey(controller.reference.inputSetting.attack);
+            //if (fireInput)
+            //{
+            //    currentFire = true;
+            //    //RangedAttack();
+            //    if (lastFire != currentFire)
+            //    {
+            //        lastFire = currentFire;
+            //        SyncFireBulletServerRpc(true);
+            //    }
+            //}
+            //else
+            //{
+            //    currentFire = false;
+            //    if (lastFire != currentFire)
+            //    {
+            //        lastFire = currentFire;
+            //        SyncFireBulletServerRpc(false);
+            //    }
+            //}
         }
 
         if (isFireRpc.Value == true && CurrentAttackCoolDown <= 0)
@@ -229,24 +228,24 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
     {
         if (IsGrounded == true && CurrentDashTime <= 0)
         {
-            controller.reference.SetVelocity(float.MaxValue, Config.data.jumpForce);
+            //controller.reference.SetVelocity(float.MaxValue, Config.data.jumpForce);
         }
 
         if (IsGrounded == false && Abled2DoubleJump == true && CurrentDashTime <= 0)
         {
-            controller.reference.SetVelocity(float.MaxValue, Config.data.jumpForce);
+            //controller.reference.SetVelocity(float.MaxValue, Config.data.jumpForce);
             Abled2DoubleJump = false;
         }
     }
 
     public void Drop()
     {
-        controller.reference.OneWayPlatformHandler.OnDropMyself();
+        //controller.reference.OneWayPlatformHandler.OnDropMyself();
     }
 
     public void RangedAttack()
     {
-        controller.reference.PresentRangeAttack();
+        //controller.reference.PresentRangeAttack();
         CurrentAttackCoolDown = Config.data.attackCooldown;
         // recoil
         velocity_X += Config.data.recoilFactor * (transform.eulerAngles.y > 90 ? 1 : -1);
@@ -254,24 +253,13 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
 
     public void TakeDamage(float forceKnockback, Vector2 position)
     {
-        if (controller.playerLives.IsInvincible) return;
+        //if (controller.playerLives.IsInvincible) return;
         CurrentKnockbackTime = Config.data.knockbackTime;
 
         Vector2 norm = (Vector2)transform.position - position;
         norm.Normalize();
         norm.y = 0;
         velocity_X += forceKnockback * (norm.x > 0 ? 1 : -1);
-        controller.reference.SetVelocity(float.MaxValue, controller.reference.Rb.linearVelocityY + norm.y * forceKnockback);
-    }
-
-    public void Dash()
-    {
-        //CurrentDashTime = Config.data.dashTime;
-        //CurrentDashCoolDown = Config.data.dashCoolDownTime;
-    }
-
-    public void MeleeAttack()
-    {
-
+        //controller.reference.SetVelocity(float.MaxValue, controller.reference.Rb.linearVelocityY + norm.y * forceKnockback);
     }
 }

@@ -46,7 +46,7 @@ public class NetworkBoosterSpawner : NetworkBehaviour
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                await UniTask.WaitUntil(() => GameController.Instance.GetTotalPlayer() == 2);
+                //await UniTask.WaitUntil(() => GameController.Instance.GetTotalPlayer() == 2);
                 await Task.Delay((int)(spawnInterval * 1000), cancellationToken);
 
                 if(IsServer)

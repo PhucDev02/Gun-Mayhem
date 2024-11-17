@@ -31,14 +31,14 @@ public class GameController : Singleton<GameController>
     private void Update()
     {
         midPoint = Vector3.zero;
-        for(int i = 0; i < players.Count; i++)
+        for(int i = 0; i < players.Length; i++)
         {
             if (players[i] != null)
             {
                 midPoint += players[i].transform.position;
             }
         }
-        midPoint/=players.Count;
+        midPoint/=players.Length;
         transform.position = midPoint;
         UpdateMeanPlayersDistance();
     }

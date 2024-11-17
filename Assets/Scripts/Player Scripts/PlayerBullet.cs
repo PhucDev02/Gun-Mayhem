@@ -20,7 +20,8 @@ public class PlayerBullet : MonoBehaviour
     }
     void Update()
     {
-        this.gameObject.transform.Translate(this.gameObject.transform.InverseTransformDirection(transform.right * GameConfig.data.bulletMoveSpeed * Time.deltaTime));
+        this.gameObject.transform.Translate(this.gameObject.transform.
+            InverseTransformDirection(transform.right * Config.data.bulletMoveSpeed * Time.deltaTime));
         if (Time.time - spawnTime > 2.5f)
         {
             Deactive();
@@ -47,7 +48,7 @@ public class PlayerBullet : MonoBehaviour
             if (actor != null)
             {
                 ObjectPool.Instance.Spawn(PoolObjectTag.HitText, UIEffectCanvas.Instance.transform).transform.position = collision.ClosestPoint(actor.transform.position);
-                actor.action.TakeDamage(GameConfig.data.bulletKnockbackForce, transform.position);
+                actor.action.TakeDamage(Config.data.bulletKnockbackForce, transform.position);
                 ObjectPool.Instance.Recall(this.gameObject);
             }
             else

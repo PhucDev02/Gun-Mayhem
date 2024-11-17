@@ -6,9 +6,9 @@ public class ResultUI : MonoBehaviour
     [SerializeField] private Sprite blueWinSpr, redWinSpr;
     [SerializeField] private Image winImg;
     
-    void Start()
-    {
-        winImg.sprite = (GameController.Winner == EPlayer.BluePlayer)
-            ? blueWinSpr : redWinSpr;
-    }
+    //void Start()
+    //{
+    //    winImg.sprite = (GameController. == EPlayer.BluePlayer)
+    //        ? blueWinSpr : redWinSpr;
+    //}
 }
