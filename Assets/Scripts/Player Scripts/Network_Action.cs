@@ -19,12 +19,12 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
     private float CurrentKnockbackTime = 0;
 
     //networking data store
-    private const int USELESS_VALUE = 13042002;
-    private Vector2 currentInput = Vector2.zero;
-    private Vector2 oldInput = Vector2.zero;
-    private bool lastFire = false, currentFire = false;
-    public NetworkVariable<Vector2> playerMovementRpc = new NetworkVariable<Vector2>();
-    public NetworkVariable<bool> isFireRpc = new NetworkVariable<bool>();
+    private float currentInputX = 0, oldInputX = 0;
+    private float currentInputY = 0, oldInputY = 0;
+    private bool currentFire = false, lastFire = false;
+    private NetworkVariable<float> playerInputX = new NetworkVariable<float>(0f);
+    private NetworkVariable<float> playerInputY = new NetworkVariable<float>(0f);
+    public NetworkVariable<bool> isFireRpc = new NetworkVariable<bool>(false);
 
     private void Start()
     {
@@ -36,14 +36,14 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
         if ((IsHost && IsOwner) || (!IsHost && !IsOwner))
         {
             controller.EPlayer = EPlayer.BluePlayer;
-            transform.position = new Vector3(-5, 0, 0);
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+            transform.SetPositionAndRotation(new Vector3(-5, 0, 0), 
+                Quaternion.Euler(0, 0, 0));
         }
         else
         {
             controller.EPlayer = EPlayer.RedPlayer;
-            transform.position = new Vector3(5, 0, 0);
-            transform.rotation = Quaternion.Euler(0, 180, 0);
+            transform.SetPositionAndRotation(new Vector3(5, 0, 0), 
+                Quaternion.Euler(0, 180, 0));
         }
     }
 
@@ -66,55 +66,51 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
         if (CurrentAttackCoolDown > 0) CurrentAttackCoolDown -= Time.deltaTime;
     }
 
-    
-
 
     private void UpdateMovement()
     {
-        velocity_X = Mathf.Lerp(velocity_X, 0, Config.data.velocityLerpFactor * Time.deltaTime);
+        HandleInputX();
+        UpdateMovementX();
+    }
 
+    private void HandleInputX()
+    {
         if (IsOwner && IsClient)
         {
             if (Input.GetKey(controller.reference.inputSetting.left))
             {
-                currentInput.x = -1;
-                if (currentInput.x != oldInput.x)
-                {
-                    oldInput.x = currentInput.x;
-                    SynchMovementServerRpc(new Vector2(-1, USELESS_VALUE));
-                }
+                currentInputX = -1;
             }
             else if (Input.GetKey(controller.reference.inputSetting.right))
             {
-                currentInput.x = 1;
-                if (currentInput.x != oldInput.x)
-                {
-                    oldInput.x = currentInput.x;
-                    SynchMovementServerRpc(new Vector2(1, USELESS_VALUE));
-                }
+                currentInputX = 1;
             }
             else
             {
-                currentInput.x = 0;
-                if (currentInput.x != oldInput.x)
-                {
-                    oldInput.x = currentInput.x;
-                    SynchMovementServerRpc(new Vector2(0, USELESS_VALUE));
-                }
+                currentInputX = 0;
+
+            }
+
+            if (currentInputX != oldInputX)
+            {
+                oldInputX = currentInputX;
+                SendMovementInputXServerRpc(currentInputX);
             }
 
         }
+    }
 
-        if (playerMovementRpc.Value.x == -1)
+    private void UpdateMovementX()
+    {
+        float inputX = playerInputX.Value;
+        velocity_X = Mathf.Lerp(velocity_X, 0, Config.data.velocityLerpFactor * Time.deltaTime);
+        
+        if (inputX != 0)
         {
-            Move(-1);
-            this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+            Move(inputX);
+            transform.rotation = Quaternion.Euler(0, inputX < 0 ? 180 : 0, 0);
         }
-        if (playerMovementRpc.Value.x == 1)
-        {
-            Move(1);
-            this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
+
         // Movement
         controller.reference.Animator.SetBool("IsGrounded", IsGrounded);
         controller.reference.Animator.SetFloat("Horizontal Input", Mathf.Abs(velocity_X));
@@ -122,55 +118,42 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
         controller.reference.SetVelocity(velocity_X * MoveSpeed, float.MaxValue);
     }
 
-    [ServerRpc]
-    public void SynchMovementServerRpc(Vector2 moveVector)
-    {
-        if (moveVector.x == USELESS_VALUE) playerMovementRpc.Value = new Vector2(playerMovementRpc.Value.x, moveVector.y);
-        else if (moveVector.y == USELESS_VALUE) playerMovementRpc.Value = new Vector2(moveVector.x, playerMovementRpc.Value.y);
-        else playerMovementRpc.Value = moveVector;
-    }
-
-    [ServerRpc]
-    public void SyncFireBulletServerRpc(bool isFire)
-    {
-        this.isFireRpc.Value = isFire;
-    }
 
     private void UpdateJumpUpAndDown()
+    {
+        HandleInputY();
+        UpdateMovementY();
+    }
+    private void HandleInputY()
     {
         if (IsOwner && IsClient)
         {
             if (Input.GetKey(controller.reference.inputSetting.jump))
             {
-                currentInput.y = 1;
-                if (currentInput.y != oldInput.y)
-                {
-                    oldInput.y = currentInput.y;
-                    SynchMovementServerRpc((new Vector2(USELESS_VALUE, 1)));
-                }
+                currentInputY = 1;
             }
             else if (Input.GetKey(controller.reference.inputSetting.drop))
             {
-                currentInput.y = -1;
-                if (currentInput.y != oldInput.y)
-                {
-                    oldInput.y = currentInput.y;
-                    SynchMovementServerRpc((new Vector2(USELESS_VALUE, -1)));
-                }
+                currentInputY = -1;
             }
             else
             {
-                currentInput.y = 0;
-                if (currentInput.y != oldInput.y)
-                {
-                    oldInput.y = currentInput.y;
-                    SynchMovementServerRpc((new Vector2(USELESS_VALUE, 0)));
-                }
+                currentInputY = 0;
+            }
+
+            if (currentInputY != oldInputY)
+            {
+                oldInputY = currentInputY;
+                SendMovementInputYServerRpc(currentInputY);
             }
         }
-        if (playerMovementRpc.Value.y == 1)
+    }
+    private void UpdateMovementY()
+    {
+        float inputY = playerInputY.Value;
+        if (inputY == 1)
             Jump();
-        else if (playerMovementRpc.Value.y == -1)
+        else if (inputY == -1)
             Drop();
     }
 
@@ -204,6 +187,23 @@ public class Network_Action : NetworkBehaviour, IPlayerAction
         {
             RangedAttack();
         }
+    }
+    [ServerRpc]
+    public void SendMovementInputXServerRpc(float inputX)
+    {
+        playerInputX.Value = inputX;
+    }
+
+    [ServerRpc]
+    public void SendMovementInputYServerRpc(float inputY)
+    {
+        playerInputY.Value = inputY;
+    }
+
+    [ServerRpc]
+    public void SyncFireBulletServerRpc(bool isFire)
+    {
+        this.isFireRpc.Value = isFire;
     }
 
     public void IncreasePlayerSpeed(float multiplier)

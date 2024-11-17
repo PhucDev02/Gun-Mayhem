@@ -1,5 +1,4 @@
 using System;
-using UnityEditor.Animations;
 using UnityEngine;
 
 [CreateAssetMenu]
@@ -11,7 +10,7 @@ public class PlayerConfigSO : ScriptableObject
 [Serializable]
 public class PlayerConfig
 {
-    public AnimatorController animator;
+    public RuntimeAnimatorController animator;
     public Sprite playerIndicator;
     public Sprite playerInvincibleIndicator;
 }

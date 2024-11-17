@@ -2,8 +2,6 @@ using System.Threading.Tasks;
 using System.Threading;
 using UnityEngine;
 using Unity.Netcode;
-using Sirenix.Reflection.Editor;
-using Unity.Collections.LowLevel.Unsafe;
 using Cysharp.Threading.Tasks;
 
 
@@ -33,7 +31,7 @@ public class NetworkBoosterSpawner : NetworkBehaviour
     private Vector3 boosterPosition;
     private CancellationTokenSource cancellationTokenSource = new();
     private NetworkVariable<NetworkBoosterPackage> networkBoosterPackage = 
-        new NetworkVariable<NetworkBoosterPackage>(writePerm: NetworkVariableWritePermission.Server);
+        new NetworkVariable<NetworkBoosterPackage>(writePerm: NetworkVariableWritePermission.Owner);
 
     private void Start()
     {
@@ -41,8 +39,6 @@ public class NetworkBoosterSpawner : NetworkBehaviour
 
         SpawnBoosterAsync(cancellationTokenSource.Token);
     }
-
-
 
     private async void SpawnBoosterAsync(CancellationToken cancellationToken)
     {
@@ -52,10 +48,14 @@ public class NetworkBoosterSpawner : NetworkBehaviour
             {
                 await UniTask.WaitUntil(() => GameController.Instance.GetTotalPlayer() == 2);
                 await Task.Delay((int)(spawnInterval * 1000), cancellationToken);
-                selectedBooster = (int)BoosterManager.Instance.GetRandomBoosterByRate().effectType;
-                boosterPosition = GetRandomSpawnPosition();
-                //Debug.Log("Spawn booster: " + selectedBooster.effectType.ToString());
-                SyncBoosterPackageClientRpc(selectedBooster, boosterPosition);
+
+                if(IsServer)
+                {
+                    selectedBooster = (int)BoosterManager.Instance.GetRandomBoosterByRate().effectType;
+                    boosterPosition = GetRandomSpawnPosition();
+                    //Debug.Log("Spawn booster: " + selectedBooster.effectType.ToString());
+                    SyncBoosterPackageClientRpc(selectedBooster, boosterPosition);
+                }
 
                 GameObject boosterInstance = ObjectPool.Instance.Spawn(PoolObjectTag.Booster);
                 boosterInstance.transform.position = networkBoosterPackage.Value.boosterPosition;
@@ -76,8 +76,8 @@ public class NetworkBoosterSpawner : NetworkBehaviour
     { 
         var boosterPack = new NetworkBoosterPackage(boosterId, boosterPos);
         networkBoosterPackage.Value = boosterPack;
-        Debug.Log("Network booster: " + networkBoosterPackage.Value.boosterId + " " +
-            networkBoosterPackage.Value.boosterPosition);
+        //Debug.Log("Network booster: " + networkBoosterPackage.Value.boosterId + " " +
+        //    networkBoosterPackage.Value.boosterPosition);
     }
 
     private Vector3 GetRandomSpawnPosition()
@@ -87,8 +87,9 @@ public class NetworkBoosterSpawner : NetworkBehaviour
         return new Vector3(x, y);
     }
 
-    void OnDestroy()
+    public override void OnDestroy()
     {
+        base.OnDestroy();
         cancellationTokenSource.Cancel();
     }
 }

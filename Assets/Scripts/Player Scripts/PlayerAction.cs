@@ -56,7 +56,6 @@ public class PlayerAction : MonoBehaviour, IPlayerAction
     private void UpdateMovement()
     {
         velocity_X = Mathf.Lerp(velocity_X, 0, Config.data.velocityLerpFactor * Time.deltaTime);
-        if (Input.GetKey(controller.reference.inputSetting.left))
         {
             Move(-1);
             this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
