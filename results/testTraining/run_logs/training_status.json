@@ -2,22 +2,22 @@
     "Bot": {
         "checkpoints": [
             {
-                "steps": 0,
-                "file_path": "results\\testTraining\\Bot\\Bot-0.onnx",
+                "steps": 12999,
+                "file_path": "results\\testTraining\\Bot\\Bot-12999.onnx",
                 "reward": null,
-                "creation_time": 1731748726.3784456,
+                "creation_time": 1731837784.238661,
                 "auxillary_file_paths": [
-                    "results\\testTraining\\Bot\\Bot-0.pt"
+                    "results\\testTraining\\Bot\\Bot-12999.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 0,
+            "steps": 12999,
             "file_path": "results\\testTraining\\Bot.onnx",
             "reward": null,
-            "creation_time": 1731748726.3784456,
+            "creation_time": 1731837784.238661,
             "auxillary_file_paths": [
-                "results\\testTraining\\Bot\\Bot-0.pt"
+                "results\\testTraining\\Bot\\Bot-12999.pt"
             ]
         }
     },

@@ -43,19 +43,14 @@ public class PlayerBullet : MonoBehaviour
     {
         if (collision.tag == "Player" || collision.tag == "Ground" || collision.tag == "Player Bullet")
         {
-            PlayerBehavior player = collision.GetComponent<PlayerBehavior>();
-            LifeComponent EnemyHealth = collision.GetComponent<LifeComponent>();
-            if (player != null)
+            Actor actor = collision.GetComponent<Actor>();
+            if (actor != null)
             {
-                ObjectPool.Instance.Spawn(PoolObjectTag.HitText, UIEffectCanvas.Instance.transform).transform.position = collision.ClosestPoint(player.transform.position);
-                player.TakeDamage(GameConfig.data.bulletKnockbackForce, transform.position);
+                ObjectPool.Instance.Spawn(PoolObjectTag.HitText, UIEffectCanvas.Instance.transform).transform.position = collision.ClosestPoint(actor.transform.position);
+                actor.action.TakeDamage(GameConfig.data.bulletKnockbackForce, transform.position);
                 ObjectPool.Instance.Recall(this.gameObject);
-                if (from == EPlayer.AI)
-                {
-                    Messenger.Broadcast(EventKey.OnHitTarget);
-                }
             }
-
+            else
             ObjectPool.Instance.Recall(this.gameObject);
         }
 

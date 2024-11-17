@@ -1,6 +1,6 @@
 ﻿public enum EventKey
 {
-    OnHitTarget,
+    OnHitDummy,
     OnMissTarget,
     OnDie,
 }

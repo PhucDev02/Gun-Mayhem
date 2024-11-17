@@ -17,39 +17,20 @@ public class PlayerBehavior : MonoBehaviour
             actor.action.Move(1);
         }
         //attack
-        if (Input.GetKey(actor.inputSetting.attack))
+        if (Input.GetKeyDown(actor.inputSetting.attack))
         {
             actor.action.Attack();
         }
         //Jump
-        if(Input.GetKey(actor.inputSetting.jump))
+        if(Input.GetKeyDown(actor.inputSetting.jump))
         {
             actor.action.Jump();
         }
         //drop
-        if(Input.GetKey(actor.inputSetting.drop))
+        if(Input.GetKeyDown(actor.inputSetting.drop))
         {
             actor.action.Drop();
         }
     }
-    public void IncreaseLives(int amount)
-    {
-        actor.life.IncreaseHp(amount);
-    }
 
-    public void BecomeInvisible(int duration)
-    {
-        actor.life.ActivateGodMode(duration);
-    }
-
-    public void ChangeSpeed(int speed)
-    {
-        actor.action.IncreasePlayerSpeed(speed);
-    }
-
-    internal void TakeDamage(float force, Vector3 position)
-    {
-        //health.TakeDamage(force);
-        actor.action.TakeDamage(force, position);
-    }
 }

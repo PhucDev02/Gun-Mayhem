@@ -522,8 +522,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actor: {fileID: 8351410740708036616}
-  MoveSpeed: 0
+  MoveSpeed: 5
   GroundCheckPoint: {fileID: 6381762661655660127}
+  velocity_X: 0
   IsGrounded: 0
   Abled2DoubleJump: 0
   CurrentAttackCoolDown: 0

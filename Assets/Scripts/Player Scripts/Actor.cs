@@ -35,4 +35,18 @@ public class Actor : MonoBehaviour
         }
         rb.linearVelocity = Vector2.right * x + Vector2.up * y;
     }
+    public void IncreaseLives(int amount)
+    {
+        life.IncreaseHp(amount);
+    }
+
+    public void BecomeInvisible(int duration)
+    {
+        life.ActivateGodMode(duration);
+    }
+
+    public void ChangeSpeed(int speed)
+    {
+        action.IncreasePlayerSpeed(speed);
+    }
 }

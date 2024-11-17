@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c44f939da96e2a94f85ba2e61f14223a, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  groundRadiusCheck: 0.25
+  groundRadiusCheck: 0.1
   maxHealth: 10
   moveSpeed: 4
   jumpForce: 15

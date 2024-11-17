@@ -48,7 +48,7 @@ public class LifeComponent : ActorComponent
                 HandleDeath();
                 return;
             }
-            transform.position = new Vector3(Random.Range(ConstValue.environmentLimitX.x, ConstValue.environmentLimitX.y), 50f);
+            transform.localPosition = new Vector3(Random.Range(ConstValue.environmentLimitX.x, ConstValue.environmentLimitX.y), 50f);
             actor.rb.linearVelocity = Vector3.zero;
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,13 +9,14 @@ public enum EPlayer
 {
     BluePlayer,
     RedPlayer,
-    AI
+    AI,
+    Dummy
 }
 
 public class GameController : Singleton<GameController>
 {
     private static EPlayer winner;
-    [SerializeField] private LifeComponent[] players;
+    public Actor[] players;
 
     Vector3 midPoint;
 
@@ -22,7 +24,7 @@ public class GameController : Singleton<GameController>
     {
         base.Awake();
         Application.targetFrameRate = 120;
-        players = FindObjectsOfType<LifeComponent>();
+        players = FindObjectsByType<Actor>(FindObjectsSortMode.None);
     }
 
     private void Update()
@@ -51,7 +53,7 @@ public class GameController : Singleton<GameController>
         if (isSetResult) return;
         isSetResult = true;
 
-        winner = (players[0].CurrentLives > players[1].CurrentLives) ?
+        winner = (players[0].life.CurrentLives > players[1].life.CurrentLives) ?
             EPlayer.BluePlayer : EPlayer.RedPlayer;
         Invoke(nameof(ShowResult), 1f);
     }
@@ -62,6 +64,11 @@ public class GameController : Singleton<GameController>
     }
     public Vector2 GetTargetPosition()
     {
-        return players[0].transform.position;
+        foreach(var x in players)
+        {
+            if (x.type != EPlayer.AI)
+                return (Vector2) x.transform.position;
+        }
+        return Vector2.zero;
     }
 }

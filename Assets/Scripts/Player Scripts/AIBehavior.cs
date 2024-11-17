@@ -15,6 +15,7 @@ public class AIBehavior : Agent
         sensor.AddObservation(actor.action.Abled2DoubleJump);
         sensor.AddObservation(actor.action.CurrentAttackCoolDown);
         sensor.AddObservation(GameController.Instance.GetTargetPosition());
+        sensor.AddObservation((Vector2)transform.position);
     }
     public override void OnEpisodeBegin()
     {
@@ -26,10 +27,12 @@ public class AIBehavior : Agent
         if (discreteActions[0] == 1)
         {
             actor.action.Move(1);
+            AddReward(-0.05f);
         }
         else if (discreteActions[0] == 2)
         {
             actor.action.Move(-1);
+            AddReward(-0.05f);
         }
 
         if (discreteActions[1] == 1)
@@ -62,15 +65,15 @@ public class AIBehavior : Agent
         {
             discreteActions[0] = 2;
         }
-        if (Input.GetKey(actor.inputSetting.attack))
+        if (Input.GetKeyDown(actor.inputSetting.attack))
         {
             discreteActions[1] = 1;
         }
-        if (Input.GetKey(actor.inputSetting.jump))
+        if (Input.GetKeyDown(actor.inputSetting.jump))
         {
             discreteActions[2] = 1;
         }
-        if (Input.GetKey(actor.inputSetting.drop))
+        if (Input.GetKeyDown(actor.inputSetting.drop))
         {
             discreteActions[3] = 1;
         }
@@ -87,14 +90,14 @@ public class AIBehavior : Agent
 
     private void RemoveListener()
     {
-        Messenger.RemoveListener(EventKey.OnHitTarget, OnHitTarget);
+        Messenger.RemoveListener(EventKey.OnHitDummy, OnHitTarget);
         Messenger.RemoveListener(EventKey.OnMissTarget, OnMissTarget);
         Messenger.RemoveListener(EventKey.OnDie, OnDie);
     }
 
     private void AddListener()
     {
-        Messenger.AddListener(EventKey.OnHitTarget, OnHitTarget);
+        Messenger.AddListener(EventKey.OnHitDummy, OnHitTarget);
         Messenger.AddListener(EventKey.OnMissTarget, OnMissTarget);
         Messenger.AddListener(EventKey.OnDie, OnDie);
     }
@@ -106,7 +109,7 @@ public class AIBehavior : Agent
 
     private void OnMissTarget()
     {
-        AddReward(-0.5f);
+        AddReward(-0.1f);
     }
 
     private void OnHitTarget()
