@@ -3,7 +3,7 @@ using Unity.Properties;
 using UnityEditor;
 using UnityEngine;
 
-public class Network_Action : NetworkPlayerBehaviour
+public class Network_Action : NetworkBehaviour
 {
     private Actor controller;
 

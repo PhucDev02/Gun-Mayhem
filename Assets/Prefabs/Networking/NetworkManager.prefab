@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6007637439179593493}
   - component: {fileID: 9183624161669560234}
   - component: {fileID: 839390901479979085}
-  - component: {fileID: 486204192862084598}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -50,7 +49,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 839390901479979085}
-    PlayerPrefab: {fileID: 4219617554342578679, guid: 14218e84ca0ea5048891a4936db28016, type: 3}
+    PlayerPrefab: {fileID: 6756238006953672195, guid: c93d93bfc5258bb44bfcbd1989325c20, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: a6266c651a8831940866963c36dacd45, type: 2}
@@ -89,7 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ProtocolType: 1
+  m_ProtocolType: 0
   m_UseWebSockets: 0
   m_UseEncryption: 0
   m_MaxPacketQueueSize: 128
@@ -106,18 +105,3 @@ MonoBehaviour:
     PacketDelayMS: 0
     PacketJitterMS: 0
     PacketDropRate: 0
---- !u!114 &486204192862084598
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3135398150416934157}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a10f948f9efb1864a8a7a79a701ee0e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dontDestroyOnLoad: 0
-  environment: production
-  maxNumberOfConnections: 2

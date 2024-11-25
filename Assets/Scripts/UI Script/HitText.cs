@@ -9,8 +9,8 @@ public class HitText : MonoBehaviour
    [SerializeField] Color color;
     private void OnValidate()
     {
-        color = text.color;
         text = GetComponent<TextMeshProUGUI>();
+        color = text.color;
     }
     private void OnEnable()
     {

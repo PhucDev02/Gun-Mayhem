@@ -31,7 +31,7 @@ public class NetworkBoosterSpawner : NetworkBehaviour
     private Vector3 boosterPosition;
     private CancellationTokenSource cancellationTokenSource = new();
     private NetworkVariable<NetworkBoosterPackage> networkBoosterPackage = 
-        new NetworkVariable<NetworkBoosterPackage>(writePerm: NetworkVariableWritePermission.Owner);
+        new NetworkVariable<NetworkBoosterPackage>();
 
     private void Start()
     {
@@ -46,10 +46,10 @@ public class NetworkBoosterSpawner : NetworkBehaviour
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                //await UniTask.WaitUntil(() => GameController.Instance.GetTotalPlayer() == 2);
+                await UniTask.WaitUntil(() => GameController.Instance.players.Count == 2);
                 await Task.Delay((int)(spawnInterval * 1000), cancellationToken);
 
-                if(IsServer)
+                if(IsHost)
                 {
                     selectedBooster = (int)BoosterManager.Instance.GetRandomBoosterByRate().effectType;
                     boosterPosition = GetRandomSpawnPosition();
@@ -71,13 +71,13 @@ public class NetworkBoosterSpawner : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
+    [ClientRpc(RequireOwnership =false)]
     public void SyncBoosterPackageClientRpc(int boosterId, Vector3 boosterPos)
     { 
         var boosterPack = new NetworkBoosterPackage(boosterId, boosterPos);
         networkBoosterPackage.Value = boosterPack;
-        //Debug.Log("Network booster: " + networkBoosterPackage.Value.boosterId + " " +
-        //    networkBoosterPackage.Value.boosterPosition);
+        Debug.Log("Network booster: " + networkBoosterPackage.Value.boosterId + " " +
+            networkBoosterPackage.Value.boosterPosition);
     }
 
     private Vector3 GetRandomSpawnPosition()

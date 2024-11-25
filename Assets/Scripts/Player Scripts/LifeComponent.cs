@@ -28,7 +28,7 @@ public class LifeComponent : ActorComponent
         currentLives = ConstValue.maxLives;
 
         HandleInvincibleForm(false);
-        UpdateLives();
+        //UpdateLives();
     }
 
     void Update()
@@ -48,7 +48,8 @@ public class LifeComponent : ActorComponent
                 HandleDeath();
                 return;
             }
-            transform.localPosition = new Vector3(Random.Range(ConstValue.environmentLimitX.x, ConstValue.environmentLimitX.y), 50f);
+            //transform.localPosition = new Vector3(Random.Range(ConstValue.environmentLimitX.x, ConstValue.environmentLimitX.y), 50f);
+            transform.localPosition = new Vector3(0, 50f);
             actor.rb.linearVelocity = Vector3.zero;
         }
     }
@@ -58,6 +59,7 @@ public class LifeComponent : ActorComponent
         currentLives = (currentLives + amount <= 0) ? 0 :
                (currentLives + amount >= ConstValue.maxLives) ? ConstValue.maxLives :
                currentLives + amount;
+        Debug.LogError("Actor Type: " + actor.type);
         MessageSystem.TriggerEvent(MessageKey.UI.UpdatePlayerLives, actor.type, currentLives);
     }
 

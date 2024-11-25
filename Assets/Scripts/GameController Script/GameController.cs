@@ -16,8 +16,10 @@ public enum EPlayer
 [DefaultExecutionOrder(-1)]
 public class GameController : Singleton<GameController>
 {
-    private static EPlayer winner;
-    public Actor[] players;
+    public static EPlayer winner;
+    public List<Actor> players = new List<Actor>();
+    public int GetTotalPlayer => players.Count;
+
 
     Vector3 midPoint;
 
@@ -25,20 +27,33 @@ public class GameController : Singleton<GameController>
     {
         base.Awake();
         Application.targetFrameRate = 120;
-        players = FindObjectsByType<Actor>(FindObjectsSortMode.None);
+        //players = FindObjectsByType<Actor>(FindObjectsSortMode.None);
+    }
+
+    public void RegisterActor(Actor actor)
+    {
+        if(!players.Contains(actor))
+            players.Add(actor);
+    }
+
+    public void UnRegisterActor(Actor actor)
+    {
+        if(players.Contains(actor))
+            players.Remove(actor);
     }
 
     private void Update()
     {
+        if (players.Count != 2) return;
         midPoint = Vector3.zero;
-        for(int i = 0; i < players.Length; i++)
+        for(int i = 0; i < players.Count; i++)
         {
             if (players[i] != null)
             {
                 midPoint += players[i].transform.position;
             }
         }
-        midPoint/=players.Length;
+        midPoint/=players.Count;
         transform.position = midPoint;
         UpdateMeanPlayersDistance();
     }
@@ -71,4 +86,5 @@ public class GameController : Singleton<GameController>
         }
         return Vector2.zero;
     }
+
 }

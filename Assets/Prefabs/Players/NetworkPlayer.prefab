@@ -52,6 +52,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: NetworkPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 6349365758163582768, guid: 94bf6e8bfbcdda94a86e76642752b9b0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8351410740708036616, guid: 94bf6e8bfbcdda94a86e76642752b9b0, type: 3}
+      propertyPath: playerIndicator
+      value: 
+      objectReference: {fileID: 3655674434988566260}
+    - target: {fileID: 8351410740708036616, guid: 94bf6e8bfbcdda94a86e76642752b9b0, type: 3}
+      propertyPath: playerInvincibleIndicator
+      value: 
+      objectReference: {fileID: 3359518229980607338}
     m_RemovedComponents:
     - {fileID: 1059392921342838323, guid: 94bf6e8bfbcdda94a86e76642752b9b0, type: 3}
     m_RemovedGameObjects: []
@@ -64,6 +76,16 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 3257067378256076306}
   m_SourcePrefab: {fileID: 100100000, guid: 94bf6e8bfbcdda94a86e76642752b9b0, type: 3}
+--- !u!212 &3359518229980607338 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 2403004154894705512, guid: 94bf6e8bfbcdda94a86e76642752b9b0, type: 3}
+  m_PrefabInstance: {fileID: 1136674621709881346}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &3655674434988566260 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 4430934056615573238, guid: 94bf6e8bfbcdda94a86e76642752b9b0, type: 3}
+  m_PrefabInstance: {fileID: 1136674621709881346}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6756238006953672195 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5910056556594949633, guid: 94bf6e8bfbcdda94a86e76642752b9b0, type: 3}

@@ -13,42 +13,45 @@ public class NetworkPlayerBehaviour : NetworkBehaviour
     private NetworkVariable<float> playerInputY = new NetworkVariable<float>(0f);
     public NetworkVariable<bool> isFireRpc = new NetworkVariable<bool>(false);
 
+    private void Start()
+    {
+        //controller = GetComponent<PlayerController>();
+        //Debug.LogError("IsHost: " + IsHost, gameObject);
+        //Debug.LogError("IsClient: " + IsClient, gameObject);
+        //Debug.LogError("IsServer: " + IsServer, gameObject);
+        //Debug.LogError("IsOwner: " + IsOwner, gameObject);
+        if ((IsHost && IsOwner) || (!IsHost && !IsOwner))
+        {
+            actor.EPlayer = EPlayer.BluePlayer;
+            transform.SetPositionAndRotation(new Vector3(-5, 0, 0),
+                Quaternion.Euler(0, 0, 0));
+        }
+        else
+        {
+            actor.EPlayer = EPlayer.RedPlayer;
+            transform.SetPositionAndRotation(new Vector3(5, 0, 0),
+                Quaternion.Euler(0, 180, 0));
+        }
+    }
+
     private void Update()
     {
-        //move
-        //if (Input.GetKey(actor.inputSetting.left))
-        //{
-        //    actor.action.Move(-1);
-        //}
-        //if (Input.GetKey(actor.inputSetting.right))
-        //{
-        //    actor.action.Move(1);
-        //}
         UpdateMovement();
-        //attack
-
         UpdateAttack();
-
         UpdateJumpAndDrop();
-        //Jump
-        //if (Input.GetKeyDown(actor.inputSetting.jump))
-        //{
-        //    actor.action.Jump();
-        //}
-        ////drop
-        //if (Input.GetKeyDown(actor.inputSetting.drop))
-        //{
-        //    actor.action.Drop();
-        //}
     }
 
     private void UpdateAttack()
     {
+        //if(IsLocalPlayer)
         if (IsOwner && IsClient)
         {
             bool fireInput = Input.GetKey(actor.inputSetting.attack);
             if (fireInput)
             {
+                //test
+                //actor.action.Attack();
+
                 currentFire = true;
                 if (lastFire != currentFire)
                 {
