@@ -1,7 +1,9 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -42,6 +44,17 @@ public class GameController : Singleton<GameController>
             players.Remove(actor);
     }
 
+    private void DeSpawnPlayer()
+    {
+        for(int i = 0; i < players.Count; i++)
+        {
+            if (players[i] != null)
+            {
+                players[i].GetComponent<NetworkObject>().Despawn();
+            }
+        }
+    }
+
     private void Update()
     {
         if (players.Count != 2) return;
@@ -70,13 +83,27 @@ public class GameController : Singleton<GameController>
 
         winner = (players[0].life.CurrentLives > players[1].life.CurrentLives) ?
             EPlayer.BluePlayer : EPlayer.RedPlayer;
-        Invoke(nameof(ShowResult), 1f);
+        StartCoroutine(ShowResult());
     }
 
-    private void ShowResult()
+    IEnumerator ShowResult()
+    {
+        yield return new WaitForSeconds(1f);
+        if(GameManager.Instance.CurrentGameMode == GameMode.Multiplayer)
+        {
+            if(RelayManager.Instance.IsHost)
+                DeSpawnPlayer();
+            yield return new WaitUntil(() => players.Count == 0);
+        }
+        MessageSystem.TriggerEvent(MessageKey.SceneManager.ChangeScene, SceneName.ResultScene);
+    }
+
+    [Button]
+    public void Test()
     {
         MessageSystem.TriggerEvent(MessageKey.SceneManager.ChangeScene, SceneName.ResultScene);
     }
+
     public Vector2 GetTargetPosition()
     {
         foreach(var x in players)

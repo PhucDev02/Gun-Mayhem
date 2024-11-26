@@ -1,6 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Threading;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -59,14 +60,21 @@ public class LifeComponent : ActorComponent
         currentLives = (currentLives + amount <= 0) ? 0 :
                (currentLives + amount >= ConstValue.maxLives) ? ConstValue.maxLives :
                currentLives + amount;
-        Debug.LogError("Actor Type: " + actor.type);
         MessageSystem.TriggerEvent(MessageKey.UI.UpdatePlayerLives, actor.type, currentLives);
     }
 
     private void HandleDeath()
     {
-        ShowWinner();
-        gameObject.SetActive(false);
+        if(GameManager.Instance.CurrentGameMode == GameMode.Multiplayer)
+        {
+            if (RelayManager.Instance.IsHost)
+                GetComponent<NetworkObject>().Despawn();
+        }
+        else
+        {
+            ShowWinner();
+            gameObject.SetActive(false);
+        }
     }
 
     public void IncreaseHp(int amount)
@@ -95,12 +103,21 @@ public class LifeComponent : ActorComponent
 
     private void ShowWinner()
     {
-        Debug.Log(GameController.Instance == null);
+        //Debug.Log(GameController.Instance == null);
         GameController.Instance.SetupGameResult();
     }
 
     private void OnDestroy()
     {
         CallCancellationTokenSource();
+    }
+
+    private void OnDisable()
+    {
+        if(GameManager.Instance?.CurrentGameMode == GameMode.Multiplayer)
+        {
+            UpdateLives(-currentLives);
+            ShowWinner();
+        }
     }
 }

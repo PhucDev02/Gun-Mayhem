@@ -9,7 +9,7 @@ public class ResultUI : MonoBehaviour
 
     void Start()
     {
-        LobbyManager.Instance.DeleteLobby();
+        GameLobbyManager.Instance.DeleteLobby();
         winImg.sprite = (GameController.winner == EPlayer.BluePlayer)
             ? blueWinSpr : redWinSpr;
     }

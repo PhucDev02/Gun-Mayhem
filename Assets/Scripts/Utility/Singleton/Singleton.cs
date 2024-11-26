@@ -16,9 +16,10 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         {
             if (_instance == null)
             {
-                var singletonObj = new GameObject();
-                singletonObj.name = typeof(T).ToString();
-                _instance = singletonObj.AddComponent<T>();
+                Debug.LogError("Singleton " + nameof(T) + " not found");
+                //var singletonObj = new GameObject();
+                //singletonObj.name = typeof(T).ToString();
+                //_instance = singletonObj.AddComponent<T>();
             }
 
             return _instance;

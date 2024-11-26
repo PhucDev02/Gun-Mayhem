@@ -11,7 +11,6 @@ public class GameplayUI : MonoBehaviour
         await UniTask.WaitUntil(() => GameController.Instance != null && GameController.Instance.GetTotalPlayer == 2);
         for (int i = 0; i < infoView.Length; i++) {
             PlayerInfoView player = infoView[i];
-            Debug.LogError("Player type " + i + " " + GameController.Instance.players[i].type);
             player.Setup(GameController.Instance.players[i].type);
         }
     }

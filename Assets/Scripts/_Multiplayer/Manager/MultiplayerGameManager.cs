@@ -31,4 +31,9 @@ public class MultiplayerGameManager : MonoBehaviour
         response.Pending = false;
 
     }
+
+    private void OnDisable()
+    {
+        NetworkManager.Singleton.Shutdown(true);
+    }
 }

@@ -107,7 +107,6 @@ public class GameLobbyManager : Singleton<GameLobbyManager>
     public string GetLobbyCode()
     {
         string lobbyCode = LobbyManager.Instance.GetLobbyCode();
-        Debug.LogError("Lobby code: " + lobbyCode);
         return lobbyCode;
     }
 
@@ -135,5 +134,11 @@ public class GameLobbyManager : Singleton<GameLobbyManager>
         await LobbyManager.Instance.UpdatePlayerData(_localLobbyPlayerData.Id, _localLobbyPlayerData.Serialize(), allocationId, connectionData);
 
         MessageSystem.TriggerEvent(MessageKey.SceneManager.ChangeScene, SceneName.MultiplayerScene);
+    }
+
+    public void DeleteLobby()
+    {
+        _ingame = false;
+        LobbyManager.Instance.DeleteLobby();
     }
 }

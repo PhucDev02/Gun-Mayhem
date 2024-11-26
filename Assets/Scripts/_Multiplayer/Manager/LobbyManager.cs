@@ -35,6 +35,8 @@ namespace Multiplayer.Manager
 
                 return false;
             }
+            if (_hearthbeatCoroutine != null) StopCoroutine(_hearthbeatCoroutine);
+            if (_refreshLobbyCoroutine != null) StopCoroutine(_refreshLobbyCoroutine);
             _hearthbeatCoroutine = StartCoroutine(HearthbeatLobbyCoroutine(_lobby.Id, 6f));
             _refreshLobbyCoroutine = StartCoroutine(RefreshLobbyCoroutine(_lobby.Id, 1f));
             return true;
@@ -55,6 +57,7 @@ namespace Multiplayer.Manager
 
                 return false;
             }
+            if (_refreshLobbyCoroutine != null) StopCoroutine(_refreshLobbyCoroutine);
             _refreshLobbyCoroutine = StartCoroutine(RefreshLobbyCoroutine(_lobby.Id, 1f));
             return true;
 

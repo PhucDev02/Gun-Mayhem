@@ -26,6 +26,18 @@ public class CustomSceneManager : Singleton<CustomSceneManager>
     private void ChangeScene(SceneName sceneName)
     {
         StartCoroutine(LoadSceneAsync(sceneName));
+        if(sceneName == SceneName.StartScene)
+        {
+            GameManager.Instance.ChangeGameMode(GameMode.None);
+        }
+        else if(sceneName == SceneName.MultiplayerScene)
+        {
+            GameManager.Instance.ChangeGameMode(GameMode.Multiplayer);
+        }
+        else
+        {
+            //AI scene
+        }
     }
 
     private IEnumerator LoadSceneAsync(SceneName sceneName)
